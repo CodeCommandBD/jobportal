@@ -1,21 +1,19 @@
-import Image, { StaticImageData } from 'next/image'
+import Image from 'next/image'
 import React from 'react'
 import { BsBookmark } from 'react-icons/bs'
 import { BiBriefcase } from 'react-icons/bi'
 import { GrLocation } from 'react-icons/gr'
+import { IJob } from '@/models/Job'
+import { jobcardone } from '@/Assets' // Default fallback
 
 interface Props {
-    item:{
-        id: number,
-        image: string |  StaticImageData,
-        title: string,
-        location: string,
-        jobType: string,
-        urgency: string,
-    }
+    item: IJob
 }
 
 const JobCard = ({item}: Props) => {
+  // Use employer image or fallback
+  const jobImage = (item.employerId as any)?.image || jobcardone;
+
   return (
     <div className='border-[1.5px] border-gray-300 dark:border-gray-700 rounded-lg p-6 relative'>
         {/* bookmark icon */}
@@ -24,13 +22,13 @@ const JobCard = ({item}: Props) => {
         </div>
         {/*  */}
         <div className='flex items-center space-x-4'>
-            <Image src={item.image} alt={item.title} width={48} height={48} />
+            <Image src={jobImage} alt={item.title} width={48} height={48} className="rounded-full object-cover" />
             <div>
                 <h1 className='text-base font-medium '>{item.title}</h1>
                 <div className='flex items-center gap-5 mt-2'>
                     <div className='flex items-center gap-1 text-gray-500'>
                         <BiBriefcase className='w-5 h-5 '></BiBriefcase>
-                        <p className='text-gray-500 text-sm'>Segment</p>
+                        <p className='text-gray-500 text-sm'>{item.company}</p>
                     </div>
                     <div className='flex items-center gap-1 text-gray-500'>
                         <GrLocation className='w-5 h-5 '></GrLocation>
