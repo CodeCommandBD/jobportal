@@ -5,6 +5,9 @@ import ResponsiveNav from "@/Components/Home/Navbar/ResponsiveNav";
 import Provider from "@/Components/HOC/Provider";
 import Footer from "@/Components/Home/Footer/Footer";
 import ScrollToTheTop from "@/Components/helpers/ScrollToTheTop";
+import StoreProvider from "@/providers/StoreProvider";
+import TanstackProvider from "@/providers/TanstackProvider";
+import AuthProvider from "@/providers/AuthProvider";
 const font = Roboto({
   weight: [
     "100",
@@ -30,12 +33,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
 
       <body className={`${font.className} antialiased`}>
-        <Provider>
-          <ResponsiveNav />
-          {children}
-          <Footer></Footer>
-          <ScrollToTheTop></ScrollToTheTop>
-        </Provider>
+        <StoreProvider>
+          <TanstackProvider>
+            <AuthProvider>
+              <Provider>
+                <ResponsiveNav />
+                {children}
+                <Footer />
+                <ScrollToTheTop />
+              </Provider>
+            </AuthProvider>
+          </TanstackProvider>
+        </StoreProvider>
       </body>
     </html>
   );
