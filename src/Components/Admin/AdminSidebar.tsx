@@ -30,7 +30,8 @@ const AdminSidebar = () => {
         { name: 'Manage Users', href: '/admin/users', icon: Users },
         { name: 'Activity Logs', href: '/admin/logs', icon: History },
         { name: 'Live Chat', href: '/admin/chat', icon: MessageSquare },
-        { name: 'Site Settings', href: '/admin/site-settings', icon: Settings },
+        { name: 'Home Page Settings', href: '/admin/site-settings', icon: Settings },
+        { name: 'General Settings', href: '/admin/settings', icon: Settings },
     ];
 
     return (
