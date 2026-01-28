@@ -38,6 +38,7 @@ export default function JobPostForm() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<JobFormValues>({
     resolver: zodResolver(jobSchema),
@@ -46,6 +47,25 @@ export default function JobPostForm() {
         urgency: 'Normal',
     }
   })
+
+  // Dummy data autofill function
+  const fillDummyData = () => {
+    setValue("title", "Senior Frontend Engineer")
+    setValue("company", "TechFlow Solutions")
+    setValue("location", "New York, USA")
+    
+    // Auto-select the first category if available
+    if (categories && categories.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const firstCategory = categories[0]
+        setValue("category", firstCategory.name || "")
+    }
+    
+    setValue("jobType", "Full Time")
+    setValue("salaryRange", "$120k - $150k")
+    setValue("description", "We are looking for a passionate Senior Frontend Engineer to join our innovative team. The ideal candidate should have strong experience with React, Next.js, and modern UI libraries.\n\nKey Responsibilities:\n- Develop new user-facing features\n- Build reusable code and libraries\n- Optimize application for maximum speed\n\nRequirements:\n- 3+ years of experience\n- Proficiency in JavaScript/TypeScript")
+    setValue("urgency", "Urgent")
+  }
 
   async function onSubmit(data: JobFormValues) {
     if (!session) {
@@ -76,6 +96,18 @@ export default function JobPostForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Dummy Data Button */}
+          <div className="flex justify-end">
+            <Button 
+                type="button" 
+                variant="outline" 
+                onClick={fillDummyData}
+                className="text-xs h-8 border-dashed"
+            >
+                Auto-fill Dummy Data
+            </Button>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="title" className="dark:text-gray-300">Job Title</Label>

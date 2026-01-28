@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import Image from 'next/image'
 import React from 'react'
 import { BsBookmark } from 'react-icons/bs'
@@ -17,7 +18,8 @@ const JobCard = ({item}: Props) => {
   const jobImage = (item.employerId as any)?.image || jobcardone;
 
   return (
-    <div className={`border-[1.5px] rounded-lg p-6 relative transition-all ${item.isFeatured ? 'border-yellow-400 bg-yellow-50/10 shadow-md ring-1 ring-yellow-400/20' : 'border-gray-200 dark:border-gray-700'}`}>
+    <Link href={`/job/${item._id}`}>
+        <div className={`border-[1.5px] rounded-lg p-6 relative transition-all ${item.isFeatured ? 'border-yellow-400 bg-yellow-50/10 shadow-md ring-1 ring-yellow-400/20' : 'border-gray-200 dark:border-gray-700'}`}>
         {/* Featured Badge */}
         {item.isFeatured && (
             <div className='absolute -top-3 left-4 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm'>
@@ -62,7 +64,8 @@ const JobCard = ({item}: Props) => {
                 <p className=''>{item.urgency}</p>
              </div>
         </div>
-    </div>
+        </div>
+    </Link>
   )
 }
 
