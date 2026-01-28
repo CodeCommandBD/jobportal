@@ -1,0 +1,48 @@
+
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/db';
+import Settings from '@/models/Settings';
+import { auth } from '@/auth';
+
+export async function GET() {
+    await dbConnect();
+    try {
+        let settings = await Settings.findOne();
+        if (!settings) {
+            settings = await Settings.create({}); // Create with defaults if none exists
+        }
+        return NextResponse.json(settings);
+    } catch (error) {
+        return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 });
+    }
+}
+
+export async function PATCH(req: Request) {
+    const session = await auth();
+    console.log("PATCH API Session:", session);
+    console.log("PATCH API Role:", (session?.user as any)?.role);
+
+    if (!session || (session.user as any).role !== 'admin') {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    await dbConnect();
+    try {
+        const body = await req.json();
+        console.log("PATCH API Body:", body);
+        
+        let settings = await Settings.findOne();
+        
+        if (!settings) {
+            settings = await Settings.create(body);
+        } else {
+            settings = await Settings.findOneAndUpdate({}, body, { new: true });
+        }
+        
+        console.log("Updated Settings Result:", settings);
+        return NextResponse.json(settings);
+    } catch (error) {
+        console.error("PATCH Settings Error:", error);
+        return NextResponse.json({ error: 'Failed to update settings' }, { status: 500 });
+    }
+}

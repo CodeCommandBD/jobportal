@@ -8,6 +8,7 @@ import { MdSupportAgent } from "react-icons/md";
 import SectionHeading from '@/Components/helpers/SectionHeading';
 import CategoryCard from './CategoryCard';
 import { useCategoryCounts } from '@/hooks/useCategoryCounts';
+import { CategorySkeleton } from '@/Components/helpers/SkeletonLoader';
 
 const Category = () => {
     const { data: counts, isLoading } = useCategoryCounts();
@@ -80,17 +81,23 @@ const Category = () => {
         <SectionHeading heading={'Popular Job Categories'} subheading='Explore dynamic job categories with real-time vacancy counts.'></SectionHeading>
         <div className='mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto p-4'>
             {
-                categoryData?.map((item,i)=>(
-                    <div 
-                    className='' 
-                    key={item.id}
-                    data-aos='fade-right'
-                    data-aos-anchor-placement ='top-center'
-                    data-aos-delay={i * 100}
-                    >
-                        <CategoryCard item={{...item, openPositions: isLoading ? 0 : item.openPositions}}></CategoryCard>
-                    </div>
-                ))
+                isLoading ? (
+                    Array.from({ length: 8 }).map((_, i) => (
+                        <CategorySkeleton key={i} />
+                    ))
+                ) : (
+                    categoryData?.map((item,i)=>(
+                        <div 
+                        className='' 
+                        key={item.id}
+                        data-aos='fade-right'
+                        data-aos-anchor-placement ='top-center'
+                        data-aos-delay={i * 100}
+                        >
+                            <CategoryCard item={item}></CategoryCard>
+                        </div>
+                    ))
+                )
             }
         </div>
     </div>

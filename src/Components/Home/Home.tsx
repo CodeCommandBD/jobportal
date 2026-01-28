@@ -1,18 +1,19 @@
 'use client'
 import React, { useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import HeroSection from './Hero/HeroSection'
-import Category from './Category/Category'
-import Job from './Job/Job'
-import TopCompany from './TopCompany/TopCompany'
-import Info from './Info/Info'
-import Pricing from './Pricing/Pricing'
-import Review from './Review/Review'
-import AOS from 'aos';
+
+const Category = dynamic(() => import('./Category/Category'), { ssr: false })
+const Job = dynamic(() => import('./Job/Job'), { ssr: false })
+const TopCompany = dynamic(() => import('./TopCompany/TopCompany'), { ssr: false })
+const Info = dynamic(() => import('./Info/Info'), { ssr: false })
+const Pricing = dynamic(() => import('./Pricing/Pricing'), { ssr: false })
+const Review = dynamic(() => import('./Review/Review'), { ssr: false })
 import 'aos/dist/aos.css';
 const Home = () => {
   useEffect(()=>{
     const initAos = async () => {
-      await import ('aos');
+      const AOS = (await import ('aos')).default;
       AOS.init({
         duration: 1000,
         easing:'ease',

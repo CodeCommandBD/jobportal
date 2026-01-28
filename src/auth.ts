@@ -35,7 +35,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           
           const passwordsMatch = await bcrypt.compare(password, user.password as string)
 
-          if (passwordsMatch) return user
+          if (passwordsMatch) {
+            return {
+              id: user._id.toString(),
+              name: user.name,
+              email: user.email,
+              role: user.role,
+            }
+          }
         }
 
         console.log("Invalid credentials")
@@ -47,7 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async jwt({ token, user, trigger, session }) {
         if (user) {
             token.role = (user as any).role;
-            token.id = (user as any)._id;
+            token.id = (user as any).id;
         }
         if (trigger === "update" && session?.name) {
             token.name = session.name

@@ -7,6 +7,9 @@ import { HiBars3BottomRight } from 'react-icons/hi2'
 import { useSession, signOut } from 'next-auth/react'
 import ThemeToggler from '@/Components/helpers/ThemeToggler'
 
+import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '@/lib/axios';
+
 interface Props {
   openNav: () => void;
 }
@@ -14,6 +17,14 @@ interface Props {
 const Navbar = ({ openNav }: Props) => {
   const { data: session } = useSession();
   const [navbg, setNavbg] = useState(false);
+
+  const { data: settings } = useQuery({
+    queryKey: ['admin-settings'],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get('/admin/settings');
+      return data;
+    },
+  });
 
   useEffect(() => {
     const handler = () => {
@@ -34,7 +45,9 @@ const Navbar = ({ openNav }: Props) => {
               <div className='w-10 h-10 bg-purple-600 dark:bg-white rounded-full flex items-center justify-center'>
                 <LuNetwork className='w-5 h-5 text-white dark:text-purple-600' ></LuNetwork>
               </div>
-              <h1 className='text-xl hidden xl:block md:text-2xl text-purple-500 dark:text-white font-semibold'>DevHire</h1>
+              <h1 className='text-xl hidden xl:block md:text-2xl text-purple-500 dark:text-white font-semibold'>
+                {settings?.siteName || 'DevHire'}
+              </h1>
             </div>
           </Link>
         </div>
