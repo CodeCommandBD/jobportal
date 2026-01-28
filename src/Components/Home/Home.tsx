@@ -6,6 +6,7 @@ import HeroSection from './Hero/HeroSection'
 const Category = dynamic(() => import('./Category/Category'), { ssr: false })
 const Job = dynamic(() => import('./Job/Job'), { ssr: false })
 const TopCompany = dynamic(() => import('./TopCompany/TopCompany'), { ssr: false })
+const Stats = dynamic(() => import('./Stats/Stats'), { ssr: false })
 const Info = dynamic(() => import('./Info/Info'), { ssr: false })
 const Review = dynamic(() => import('./Review/Review'), { ssr: false })
 import 'aos/dist/aos.css';
@@ -28,6 +29,7 @@ const Home = () => {
       <Category></Category>
       <Job></Job>
       <TopCompany></TopCompany>
+      <Stats></Stats>
       <Info></Info>
       <Review></Review>
     </div>
