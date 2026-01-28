@@ -88,7 +88,17 @@ const responsive = {
         slidesToSlide: 1 // optional, default to 1.
     }
 };
+import React, { useEffect, useState } from 'react'
+
 const TopCompany = () => {
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) return null
+
     return (
         <div className='py-16 '>
             <SectionHeading heading='Top Company Registered' subheading='Some of the companies we have helped recruit excellent applicants over the years'></SectionHeading>

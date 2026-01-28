@@ -48,6 +48,14 @@ const responsive = {
     }
 };
 const Review = () => {
+    const [mounted, setMounted] = React.useState(false)
+
+    React.useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) return null
+
     return (
         <div className='py-16'>
             <SectionHeading heading='Testimonials' subheading='all man can feedbak , and send their opnions. '></SectionHeading>

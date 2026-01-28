@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import { GiTakeMyMoney } from 'react-icons/gi'
 import { MdOutlineCampaign } from "react-icons/md";
@@ -6,75 +7,77 @@ import { FaCode, FaProjectDiagram, FaUserNurse, FaCarSide, FaChalkboardTeacher, 
 import { MdSupportAgent } from "react-icons/md";
 import SectionHeading from '@/Components/helpers/SectionHeading';
 import CategoryCard from './CategoryCard';
+import { useCategoryCounts } from '@/hooks/useCategoryCounts';
 
 const Category = () => {
+    const { data: counts, isLoading } = useCategoryCounts();
 
     const categoryData = [
         {
             id: 1,
             categoryName: 'Accounting / Finance',
-            openPositions: 2,
+            openPositions: counts?.['Accounting / Finance'] || 0,
             icon: <GiTakeMyMoney className='w-10 h-10 text-purple-500 dark:text-white' />
         },
         {
             id: 2,
             categoryName: 'Marketing',
-            openPositions: 5,
+            openPositions: counts?.['Marketing'] || 0,
             icon: <MdOutlineCampaign className='w-10 h-10 text-purple-500 dark:text-white' />
         },
         {
             id: 3,
             categoryName: 'Design',
-            openPositions: 3,
+            openPositions: counts?.['Design'] || 0,
             icon: <FiPenTool className='w-10 h-10 text-purple-500 dark:text-white' />
         },
         {
             id: 4,
             categoryName: 'Development',
-            openPositions: 8,
+            openPositions: counts?.['Development'] || 0,
             icon: <FaCode className='w-10 h-10 text-purple-500 dark:text-white' />
         },
         {
             id: 5,
             categoryName: 'Project Manager',
-            openPositions: 2,
+            openPositions: counts?.['Project Manager'] || 0,
             icon: <FaProjectDiagram className='w-10 h-10 text-purple-500 dark:text-white' />
         },
         {
             id: 6,
             categoryName: 'Customer Service',
-            openPositions: 4,
+            openPositions: counts?.['Customer Service'] || 0,
             icon: <MdSupportAgent className='w-10 h-10 text-purple-500 dark:text-white' />
         },
         {
             id: 7,
             categoryName: 'Health and Care',
-            openPositions: 6,
+            openPositions: counts?.['Health and Care'] || 0,
             icon: <FaUserNurse className='w-10 h-10 text-purple-500 dark:text-white' />
         },
         {
             id: 8,
             categoryName: 'Automotive Jobs',
-            openPositions: 3,
+            openPositions: counts?.['Automotive Jobs'] || 0,
             icon: <FaCarSide className='w-10 h-10 text-purple-500 dark:text-white' />
         },
         {
             id: 9,
             categoryName: 'Education',
-            openPositions: 5,
+            openPositions: counts?.['Education'] || 0,
             icon: <FaChalkboardTeacher className='w-10 h-10 text-purple-500 dark:text-white' />
         },
         {
             id: 10,
             categoryName: 'Human Resources',
-            openPositions: 2,
+            openPositions: counts?.['Human Resources'] || 0,
             icon: <FaUserTie className='w-10 h-10 text-purple-500 dark:text-white' />
         },
     ]
 
   return (
     <div className='pt-16 pb-16'>
-        <SectionHeading heading={'Popular Job Categories'} subheading='2025 jobs live - 293 added today.'></SectionHeading>
+        <SectionHeading heading={'Popular Job Categories'} subheading='Explore dynamic job categories with real-time vacancy counts.'></SectionHeading>
         <div className='mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6 max-w-6xl mx-auto p-4'>
             {
                 categoryData?.map((item,i)=>(
@@ -85,7 +88,7 @@ const Category = () => {
                     data-aos-anchor-placement ='top-center'
                     data-aos-delay={i * 100}
                     >
-                        <CategoryCard item={item}></CategoryCard>
+                        <CategoryCard item={{...item, openPositions: isLoading ? 0 : item.openPositions}}></CategoryCard>
                     </div>
                 ))
             }

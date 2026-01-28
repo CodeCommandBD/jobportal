@@ -4,8 +4,17 @@ import JobCard from './JobCard';
 import { useJobs } from '@/hooks/useJobs';
 import { IJob } from '@/models/Job';
 
+import { useSearchParams } from 'next/navigation';
+
 const Job = () => {
-  const { data: jobs, isLoading, error } = useJobs();
+  const searchParams = useSearchParams();
+  const filters = {
+    title: searchParams.get('title') || undefined,
+    location: searchParams.get('location') || undefined,
+    category: searchParams.get('category') || undefined,
+  };
+
+  const { data: jobs, isLoading, error } = useJobs(filters);
 
   if (isLoading) {
       return <div className="text-center py-10">Loading jobs...</div>
@@ -19,15 +28,21 @@ const Job = () => {
         <SectionHeading heading='Featured Jobs' subheading='Know your worth and find the job that qualify your life '></SectionHeading>
         <div className='max-w-6xl px-4 mx-auto mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 items-center'>
             {
-                jobs?.map((item: IJob, i: number) => (
-                    <div 
-                    data-aos='fade-up'
-                    data-aos-anchor-placement ='top-center'
-                    data-aos-delay={i * 100}
-                    key={item._id as unknown as string}>
-                        <JobCard  item={item} />
+                jobs && jobs.length > 0 ? (
+                    jobs.map((item: IJob, i: number) => (
+                        <div 
+                        data-aos='fade-up'
+                        data-aos-anchor-placement ='top-center'
+                        data-aos-delay={i * 100}
+                        key={item._id?.toString()}>
+                            <JobCard  item={item} />
+                        </div>
+                    ))
+                ) : (
+                    <div className="col-span-full text-center py-10 text-gray-500">
+                        No jobs found matching your criteria.
                     </div>
-                ))
+                )
             }
         </div>
         <div className='mt-10 text-center'>
