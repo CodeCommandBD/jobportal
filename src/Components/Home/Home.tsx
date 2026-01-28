@@ -5,7 +5,7 @@ import Category from './Category/Category'
 import Job from './Job/Job'
 import TopCompany from './TopCompany/TopCompany'
 import Info from './Info/Info'
-import Priceing from './Priceing/Priceing'
+import Pricing from './Pricing/Pricing'
 import Review from './Review/Review'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -29,7 +29,7 @@ const Home = () => {
       <Job></Job>
       <TopCompany></TopCompany>
       <Info></Info>
-      <Priceing></Priceing>
+      <Pricing></Pricing>
       <Review></Review>
     </div>
   )
