@@ -6,6 +6,7 @@ import axiosInstance from '@/lib/axios';
 import { Megaphone, X } from 'lucide-react';
 
 const AnnouncementBanner = () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data: announcements = [] } = useQuery<any[]>({
         queryKey: ['announcements'],
         queryFn: async () => {

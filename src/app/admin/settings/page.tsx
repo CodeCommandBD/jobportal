@@ -13,7 +13,17 @@ import { toast } from 'react-hot-toast';
 
 const SiteSettings = () => {
     const queryClient = useQueryClient();
-    const { data: settings, isLoading } = useQuery({
+    interface Settings {
+        siteName: string;
+        siteDescription: string;
+        contactEmail: string;
+        maintenanceMode: boolean;
+        showChat: boolean;
+        maxJobsPerEmployer: number;
+        metaKeywords: string;
+    }
+
+    const { data: settings, isLoading } = useQuery<Settings>({
         queryKey: ['admin-settings'],
         queryFn: async () => {
             const { data } = await axiosInstance.get('/admin/settings');
@@ -21,7 +31,7 @@ const SiteSettings = () => {
         },
     });
 
-    const [form, setForm] = useState({
+    const [form, setForm] = useState<Settings>({
         siteName: '',
         siteDescription: '',
         contactEmail: '',
@@ -46,7 +56,7 @@ const SiteSettings = () => {
     }, [settings]);
 
     const mutation = useMutation({
-        mutationFn: async (updatedSettings: any) => {
+        mutationFn: async (updatedSettings: Settings) => {
             await axiosInstance.patch('/admin/settings', updatedSettings);
         },
         onSuccess: () => {

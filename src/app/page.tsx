@@ -4,7 +4,9 @@ import React from 'react'
 const page = () => {
   return (
     <div>
-        <Home></Home>
+        <React.Suspense fallback={<div>Loading...</div>}>
+            <Home></Home>
+        </React.Suspense>
     </div>
   )
 }

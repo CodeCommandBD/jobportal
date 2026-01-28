@@ -7,11 +7,12 @@ import { logActivity } from "@/lib/audit";
 
 export async function PATCH(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     try {
         const session = await auth();
-        if (!session || (session.user as any).role !== 'admin') {
+        if (!session || (session.user as { role?: string }).role !== 'admin') {
             return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
         }
 
@@ -21,16 +22,16 @@ export async function PATCH(
         await dbConnect();
         
         // Prevent admin from banning themselves
-        if (session.user?.id === params.id && status === 'banned') {
+        if (session.user?.id === id && status === 'banned') {
             return NextResponse.json({ message: "You cannot ban yourself" }, { status: 400 });
         }
 
-        const oldUser = await User.findById(params.id);
+        const oldUser = await User.findById(id);
         if (!oldUser) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
         }
 
-        const updatedUser = await User.findByIdAndUpdate(params.id, body, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(id, body, { new: true });
 
         // Log the activity
         let action = "Updated User";
@@ -51,7 +52,7 @@ export async function PATCH(
             adminId: session.user?.id || '',
             adminName: session.user?.name || 'Admin',
             action,
-            targetId: params.id,
+            targetId: id,
             targetType: "User",
             details,
         });

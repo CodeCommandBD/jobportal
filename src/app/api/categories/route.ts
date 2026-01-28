@@ -23,12 +23,13 @@ export async function GET() {
             }
         ]);
 
-        const categoryCounts = counts.reduce((acc: any, curr: any) => {
+        const categoryCounts = counts.reduce((acc: Record<string, number>, curr: { _id: string, count: number }) => {
             acc[curr._id] = curr.count;
             return acc;
         }, {});
 
         // Attach counts to categories
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const categoriesWithCounts = categories.map((cat: any) => ({
             ...cat,
             count: categoryCounts[cat.name] || 0
@@ -44,7 +45,7 @@ export async function GET() {
 export async function POST(req: Request) {
     try {
         const session = await auth();
-        if (!session || (session.user as any).role !== 'admin') {
+        if (!session || (session.user as { role?: string }).role !== 'admin') {
             return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
         }
 
@@ -61,9 +62,10 @@ export async function POST(req: Request) {
         });
 
         return NextResponse.json(newCategory, { status: 201 });
-    } catch (error: any) {
+    } catch (error) {
         console.error("Create category error:", error);
-        if (error.code === 11000) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if ((error as any).code === 11000) {
             return NextResponse.json({ message: "Category already exists" }, { status: 400 });
         }
         return NextResponse.json({ message: "Failed to create category" }, { status: 500 });

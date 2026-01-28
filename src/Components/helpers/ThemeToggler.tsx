@@ -9,7 +9,7 @@ const ThemeToggler = () => {
     const {theme, setTheme, systemTheme} = useTheme()
 
     useEffect(()=>{
-        setMount(!mount)
+        setMount(true)
     },[])
     if(!mount) return null
 

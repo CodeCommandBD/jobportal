@@ -3,9 +3,8 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
-import { Megaphone, Plus, Trash2, Info, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Megaphone, Trash2, Info, AlertTriangle, CheckCircle } from 'lucide-react';
 import SectionHeading from '@/Components/helpers/SectionHeading';
-import { TableRowSkeleton } from '@/Components/helpers/SkeletonLoader';
 import { toast } from 'react-hot-toast';
 
 const ManageAnnouncements = () => {
@@ -13,7 +12,14 @@ const ManageAnnouncements = () => {
     const [text, setText] = useState('');
     const [type, setType] = useState('info');
 
-    const { data: announcements, isLoading } = useQuery<any[]>({
+    interface Announcement {
+        _id: string;
+        text: string;
+        type: string;
+        isActive: boolean;
+    }
+
+    const { data: announcements, isLoading } = useQuery<Announcement[]>({
         queryKey: ['admin-announcements'],
         queryFn: async () => {
             const { data } = await axiosInstance.get('/announcements');
@@ -22,7 +28,7 @@ const ManageAnnouncements = () => {
     });
 
     const createMutation = useMutation({
-        mutationFn: async (newAnno: any) => {
+        mutationFn: async (newAnno: { text: string; type: string; isActive: boolean }) => {
             await axiosInstance.post('/announcements', newAnno);
         },
         onSuccess: () => {

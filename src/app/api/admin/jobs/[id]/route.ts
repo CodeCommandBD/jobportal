@@ -7,16 +7,17 @@ import { logActivity } from "@/lib/audit";
 
 export async function DELETE(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     try {
         const session = await auth();
-        if (!session || (session.user as any).role !== 'admin') {
+        if (!session || (session.user as { role?: string }).role !== 'admin') {
             return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
         }
 
         await dbConnect();
-        const deletedJob = await Job.findByIdAndDelete(params.id);
+        const deletedJob = await Job.findByIdAndDelete(id);
 
         if (!deletedJob) {
             return NextResponse.json({ message: "Job not found" }, { status: 404 });
@@ -30,17 +31,18 @@ export async function DELETE(
 }
 export async function PATCH(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     try {
         const session = await auth();
-        if (!session || (session.user as any).role !== 'admin') {
+        if (!session || (session.user as { role?: string }).role !== 'admin') {
             return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
         }
 
         const body = await req.json();
         await dbConnect();
-        const updatedJob = await Job.findByIdAndUpdate(params.id, body, { new: true });
+        const updatedJob = await Job.findByIdAndUpdate(id, body, { new: true });
 
         if (!updatedJob) {
             return NextResponse.json({ message: "Job not found" }, { status: 404 });
@@ -58,7 +60,7 @@ export async function PATCH(
             adminId: session.user?.id || '',
             adminName: session.user?.name || 'Admin',
             action,
-            targetId: params.id,
+            targetId: id,
             targetType: "Job",
             details: `${action}: ${updatedJob.title}`,
         });

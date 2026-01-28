@@ -2,10 +2,10 @@
 'use client'
 import React, { useState } from 'react';
 import SectionHeading from '@/Components/helpers/SectionHeading';
-import { Card, CardContent } from '@/Components/ui/card';
+import { Card } from '@/Components/ui/card';
 import { Input } from '@/Components/ui/input';
 import { Button } from '@/Components/ui/button';
-import { Search, Send, User, MessageCircle, MoreVertical, Phone, Video } from 'lucide-react';
+import { Search, Send, MessageCircle, MoreVertical, Phone, Video } from 'lucide-react';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
@@ -15,7 +15,25 @@ const AdminChat = () => {
     const [selectedSenderId, setSelectedSenderId] = useState<string | null>(null);
     const [message, setMessage] = useState('');
 
-    const { data: rawMessages = [] } = useQuery({
+    interface ChatMessage {
+        _id: string;
+        text: string;
+        senderId: string;
+        senderName: string;
+        createdAt: string;
+    }
+
+    interface ChatGroup {
+        id: string;
+        name: string;
+        lastMessage: string;
+        time: string;
+        status: string;
+        messages: ChatMessage[];
+        unread: number;
+    }
+
+    const { data: rawMessages = [] } = useQuery<ChatMessage[]>({
         queryKey: ['admin-chat-messages'],
         queryFn: async () => {
             const { data } = await axiosInstance.get('/chat');
@@ -26,8 +44,8 @@ const AdminChat = () => {
 
     // Group messages by senderId
     const chatList = React.useMemo(() => {
-        const groups: Record<string, any> = {};
-        rawMessages.forEach((m: any) => {
+        const groups: Record<string, ChatGroup> = {};
+        rawMessages.forEach((m) => {
             if (m.senderId === 'admin') return; // Skip admin replies in the list
             if (!groups[m.senderId]) {
                 groups[m.senderId] = {
@@ -36,7 +54,8 @@ const AdminChat = () => {
                     lastMessage: m.text,
                     time: new Date(m.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                     status: 'online',
-                    messages: []
+                    messages: [],
+                    unread: 0
                 };
             }
             groups[m.senderId].messages.push(m);
@@ -48,10 +67,10 @@ const AdminChat = () => {
     const selectedChat = chatList.find(c => c.id === selectedSenderId);
     
     // Get conversation for selected chat (including admin replies)
-    const activeMessages = rawMessages.filter((m: any) => 
+    const activeMessages = rawMessages.filter((m) => 
         m.senderId === selectedSenderId || 
-        (m.senderId === 'admin' && rawMessages.some((prev: any) => prev.senderId === selectedSenderId && new Date(prev.createdAt) < new Date(m.createdAt)))
-    ).sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        (m.senderId === 'admin' && rawMessages.some((prev) => prev.senderId === selectedSenderId && new Date(prev.createdAt) < new Date(m.createdAt)))
+    ).sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
 
     const mutation = useMutation({
         mutationFn: async (text: string) => {
@@ -140,7 +159,7 @@ const AdminChat = () => {
 
                             {/* Messages */}
                             <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50/30 dark:bg-gray-900/30">
-                                {activeMessages.map((msg: any) => (
+                                {activeMessages.map((msg) => (
                                     <div key={msg._id} className={`flex ${msg.senderId === 'admin' ? 'justify-end' : 'justify-start'}`}>
                                         <div className={`flex flex-col space-y-1 max-w-[70%] ${msg.senderId === 'admin' ? 'items-end' : 'items-start'}`}>
                                             <div className={`p-4 rounded-2xl text-sm shadow-sm ${

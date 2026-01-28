@@ -1,7 +1,7 @@
 
 'use client'
 import React, { useState } from 'react';
-import { MessageSquare, Send, X, User } from 'lucide-react';
+import { MessageSquare, Send, X } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 
@@ -65,6 +65,7 @@ const ChatWidget = () => {
 
                     {/* Messages Area */}
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50/50 dark:bg-gray-900/50">
+                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                         {messages.map((msg: any) => {
                             const isAdmin = msg.senderId === 'admin' || msg.senderName === 'DevHire Support';
                             return (

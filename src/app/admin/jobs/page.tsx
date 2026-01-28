@@ -3,7 +3,7 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
-import { Trash2, AlertCircle, Check, X, Star } from 'lucide-react';
+import { Trash2, Check, X, Star } from 'lucide-react';
 import { IJob } from '@/models/Job';
 import SectionHeading from '@/Components/helpers/SectionHeading';
 import { TableRowSkeleton } from '@/Components/helpers/SkeletonLoader';

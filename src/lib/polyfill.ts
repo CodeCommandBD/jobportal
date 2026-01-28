@@ -10,6 +10,7 @@ if (typeof global !== 'undefined') {
         key: () => null,
         length: 0,
       };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).localStorage = mockStorage;
       console.log('localStorage polyfill applied');
     }

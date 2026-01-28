@@ -14,6 +14,7 @@ export async function GET() {
         }
         return NextResponse.json(settings);
     } catch (error) {
+        console.error("Fetch settings error:", error);
         return NextResponse.json({ error: 'Failed to fetch settings' }, { status: 500 });
     }
 }
@@ -21,9 +22,9 @@ export async function GET() {
 export async function PATCH(req: Request) {
     const session = await auth();
     console.log("PATCH API Session:", session);
-    console.log("PATCH API Role:", (session?.user as any)?.role);
+    console.log("PATCH API Role:", (session?.user as { role?: string })?.role);
 
-    if (!session || (session.user as any).role !== 'admin') {
+    if (!session || (session.user as { role?: string }).role !== 'admin') {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

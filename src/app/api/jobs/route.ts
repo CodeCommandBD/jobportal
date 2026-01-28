@@ -12,7 +12,8 @@ export async function GET(req: Request) {
         const location = searchParams.get('location');
         const category = searchParams.get('category');
 
-        let query: any = {};
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const query: Record<string, any> = {};
 
         if (title) {
             query.title = { $regex: title, $options: 'i' };
@@ -26,7 +27,7 @@ export async function GET(req: Request) {
 
         // Public users only see approved jobs
         const session = await auth();
-        const isAdmin = (session?.user as any)?.role === 'admin';
+        const isAdmin = (session?.user as { role?: string })?.role === 'admin';
         
         if (!isAdmin) {
             query.status = 'approved';
@@ -51,11 +52,12 @@ export async function POST(req: Request) {
     const body = await req.json();
     const newJob = await Job.create({
       ...body,
-      employerId: (session.user as any).id,
+      employerId: session.user.id,
       status: 'pending', // Force pending for new jobs
     });
     return NextResponse.json(newJob, { status: 201 });
   } catch (error) {
+    console.error("Create job error:", error);
     return NextResponse.json({ message: "Error creating job" }, { status: 500 });
   }
 }

@@ -11,14 +11,15 @@ export async function GET() {
         const announcements = await Announcement.find({ isActive: true }).sort({ createdAt: -1 });
         return NextResponse.json(announcements);
     } catch (error) {
-        return NextResponse.json({ message: "Failed to fetch announcements" }, { status: 500 });
+        console.error("Announcements error:", error);
+        return NextResponse.json({ message: "Action failed" }, { status: 500 });
     }
 }
 
 export async function POST(req: Request) {
     try {
         const session = await auth();
-        if (!session || (session.user as any).role !== 'admin') {
+        if (!session || (session.user as { role?: string }).role !== 'admin') {
             return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
         }
 
@@ -35,14 +36,15 @@ export async function POST(req: Request) {
 
         return NextResponse.json(newAnnouncement, { status: 201 });
     } catch (error) {
-        return NextResponse.json({ message: "Failed to create announcement" }, { status: 500 });
+        console.error("Announcements error:", error);
+        return NextResponse.json({ message: "Action failed" }, { status: 500 });
     }
 }
 
 export async function DELETE(req: Request) {
     try {
         const session = await auth();
-        if (!session || (session.user as any).role !== 'admin') {
+        if (!session || (session.user as { role?: string }).role !== 'admin') {
             return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
         }
 
@@ -65,6 +67,7 @@ export async function DELETE(req: Request) {
 
         return NextResponse.json({ message: "Deleted" });
     } catch (error) {
-        return NextResponse.json({ message: "Failed to delete" }, { status: 500 });
+        console.error("Announcements error:", error);
+        return NextResponse.json({ message: "Action failed" }, { status: 500 });
     }
 }

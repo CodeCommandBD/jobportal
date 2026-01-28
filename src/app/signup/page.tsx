@@ -1,8 +1,3 @@
-import { Button } from "@/Components/ui/button"
-import { Input } from "@/Components/ui/input"
-import { Label } from "@/Components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/Components/ui/card"
-import Link from "next/link"
 import RegisterForm from '@/Components/auth/RegisterForm'
 import React from 'react'
 

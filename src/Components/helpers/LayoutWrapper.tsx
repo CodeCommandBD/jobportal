@@ -15,7 +15,7 @@ import AnnouncementBanner from './AnnouncementBanner';
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
     const { data: session, status } = useSession();
-    const userRole = (session?.user as any)?.role;
+    const userRole = (session?.user as { role?: string })?.role;
 
     const { data: settings, isLoading: isSettingsLoading } = useQuery({
         queryKey: ['admin-settings'],

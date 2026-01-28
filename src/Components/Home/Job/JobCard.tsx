@@ -13,6 +13,7 @@ interface Props {
 
 const JobCard = ({item}: Props) => {
   // Use employer image or fallback
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jobImage = (item.employerId as any)?.image || jobcardone;
 
   return (
@@ -39,6 +40,7 @@ const JobCard = ({item}: Props) => {
                         <BiBriefcase className='w-5 h-5 '></BiBriefcase>
                         <div className="flex items-center gap-1">
                             <p className='text-gray-500 text-sm'>{item.company}</p>
+                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                             {(item.employerId as any)?.isVerified && (
                                 <CheckCircle size={14} className="text-blue-500" fill="currentColor" />
                             )}

@@ -10,7 +10,8 @@ export async function GET() {
         const messages = await Message.find().sort({ createdAt: 1 });
         return NextResponse.json(messages);
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to fetch messages' }, { status: 500 });
+        console.error("Chat error:", error);
+        return NextResponse.json({ error: 'Operation failed' }, { status: 500 });
     }
 }
 
@@ -29,6 +30,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json(newMessage);
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
+        console.error("Chat error:", error);
+        return NextResponse.json({ error: 'Operation failed' }, { status: 500 });
     }
 }

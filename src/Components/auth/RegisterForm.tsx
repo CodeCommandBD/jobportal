@@ -41,8 +41,9 @@ export default function RegisterForm() {
     try {
       await axiosInstance.post("/auth/register", data)
       router.push("/signin")
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Something went wrong")
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setError((err as any).response?.data?.message || "Something went wrong")
     } finally {
       setLoading(false)
     }

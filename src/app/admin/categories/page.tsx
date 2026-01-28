@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
-import { Trash2, Plus, Grid, Search } from 'lucide-react';
+import { Trash2, Plus, Grid } from 'lucide-react';
 import SectionHeading from '@/Components/helpers/SectionHeading';
 import { TableRowSkeleton } from '@/Components/helpers/SkeletonLoader';
 import { toast } from 'react-hot-toast';
@@ -12,7 +12,13 @@ const ManageCategories = () => {
     const queryClient = useQueryClient();
     const [newName, setNewName] = useState('');
 
-    const { data: categories, isLoading } = useQuery<any[]>({
+    interface Category {
+        _id: string;
+        name: string;
+        count: number;
+    }
+
+    const { data: categories, isLoading } = useQuery<Category[]>({
         queryKey: ['admin-categories'],
         queryFn: async () => {
             const { data } = await axiosInstance.get('/categories');
@@ -29,7 +35,7 @@ const ManageCategories = () => {
             setNewName('');
             toast.success('Category added');
         },
-        onError: (error: any) => {
+        onError: (error: { response?: { data?: { message?: string } } }) => {
             toast.error(error.response?.data?.message || 'Failed to add category');
         }
     });

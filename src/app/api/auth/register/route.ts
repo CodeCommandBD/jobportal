@@ -42,10 +42,11 @@ export async function POST(req: Request) {
       { message: "User created successfully", userId: newUser._id },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error("Registration error:", error);
     if (error instanceof z.ZodError) {
-        return NextResponse.json({ message: "Invalid data", errors: error.errors }, { status: 400 });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return NextResponse.json({ message: "Invalid data", errors: (error as any).errors }, { status: 400 });
     }
     return NextResponse.json(
       { message: "Internal Server Error" },

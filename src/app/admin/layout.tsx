@@ -12,10 +12,10 @@ export default async function AdminLayout({
     const session = await auth();
 
     console.log("Admin Check Session:", session);
-    console.log("User Role:", (session?.user as any)?.role);
+    console.log("User Role:", (session?.user as { role?: string })?.role);
 
     // Protection: Redirect if not admin
-    if (!session || (session.user as any).role !== 'admin') {
+    if (!session || (session.user as { role?: string }).role !== 'admin') {
         redirect('/');
     }
 

@@ -60,8 +60,9 @@ export default function JobPostForm() {
       await axiosInstance.post("/jobs", data)
       router.push("/")
       router.refresh()
-    } catch (err: any) {
-      setError(err.response?.data?.message || "Something went wrong")
+    } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setError((err as any).response?.data?.message || "Something went wrong")
     } finally {
       setLoading(false)
     }
@@ -103,6 +104,7 @@ export default function JobPostForm() {
                 disabled={categoriesLoading}
               >
                 <option value="">{categoriesLoading ? "Loading..." : "Select Category"}</option>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {categories.map((cat: any) => (
                   <option key={cat._id} value={cat.name}>{cat.name}</option>
                 ))}

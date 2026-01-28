@@ -3,12 +3,20 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
-import { History, Shield, User, Info, Calendar, Clock, Terminal } from 'lucide-react';
+import { Shield, Calendar, Clock, Terminal } from 'lucide-react';
 import SectionHeading from '@/Components/helpers/SectionHeading';
 import { TableRowSkeleton } from '@/Components/helpers/SkeletonLoader';
 
 const AdminLogs = () => {
-    const { data: logs, isLoading } = useQuery<any[]>({
+    interface Log {
+        _id: string;
+        adminName: string;
+        action: string;
+        details: string;
+        createdAt: string;
+    }
+
+    const { data: logs, isLoading } = useQuery<Log[]>({
         queryKey: ['admin-logs'],
         queryFn: async () => {
             const { data } = await axiosInstance.get('/admin/logs');

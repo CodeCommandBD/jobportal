@@ -17,6 +17,7 @@ const Category = () => {
                         <CategorySkeleton key={i} />
                     ))
                 ) : (
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     categories?.map((item: any, i: number)=>(
                         <div 
                         className='' 

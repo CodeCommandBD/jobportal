@@ -12,7 +12,7 @@ const Maintenance = () => {
                 Under Maintenance
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-400 max-w-md mx-auto mb-10 leading-relaxed">
-                We're currently performing some scheduled updates to improve your experience. We'll be back online shortly!
+                We&apos;re currently performing some scheduled updates to improve your experience. We&apos;ll be back online shortly!
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
                 <a 

@@ -3,7 +3,7 @@
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
-import { Mail, UserCircle, Shield, Ban, CheckCircle } from 'lucide-react';
+import { Mail, UserCircle, Ban, CheckCircle } from 'lucide-react';
 import SectionHeading from '@/Components/helpers/SectionHeading';
 import { CustomLoader } from '@/Components/helpers/SkeletonLoader';
 import { toast } from 'react-hot-toast';
@@ -12,9 +12,19 @@ import { useSession } from 'next-auth/react';
 const ManageUsers = () => {
     const queryClient = useQueryClient();
     const { data: session } = useSession();
-    const currentUserId = (session?.user as any)?.id;
+    const currentUserId = session?.user?.id;
 
-    const { data: users, isLoading } = useQuery<any[]>({
+    interface User {
+        _id: string;
+        name: string;
+        email: string;
+        role: string;
+        status: string;
+        isVerified: boolean;
+        createdAt: string;
+    }
+
+    const { data: users, isLoading } = useQuery<User[]>({
         queryKey: ['admin-users'],
         queryFn: async () => {
             const { data } = await axiosInstance.get('/admin/users');
@@ -23,14 +33,14 @@ const ManageUsers = () => {
     });
 
     const updateMutation = useMutation({
-        mutationFn: async ({ id, data }: { id: string, data: any }) => {
+        mutationFn: async ({ id, data }: { id: string, data: Partial<User> }) => {
             await axiosInstance.patch(`/admin/users/${id}`, data);
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['admin-users'] });
             toast.success('User updated successfully');
         },
-        onError: (error: any) => {
+        onError: (error: { response?: { data?: { message?: string } } }) => {
             toast.error(error.response?.data?.message || 'Update failed');
         }
     });

@@ -9,7 +9,6 @@ import {
     Users, 
     Settings, 
     LogOut,
-    PlusCircle,
     MessageSquare,
     Grid,
     Megaphone,

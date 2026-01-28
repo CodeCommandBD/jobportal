@@ -3,12 +3,21 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
-import { FileText, User, Briefcase, Calendar, Clock } from 'lucide-react';
+import { User, Briefcase, Calendar, Clock } from 'lucide-react';
 import SectionHeading from '@/Components/helpers/SectionHeading';
 import { TableRowSkeleton } from '@/Components/helpers/SkeletonLoader';
 
 const AdminApplications = () => {
-    const { data: applications, isLoading } = useQuery<any[]>({
+    interface Application {
+        _id: string;
+        userName: string;
+        userEmail: string;
+        jobTitle: string;
+        status: string;
+        createdAt: string;
+    }
+
+    const { data: applications, isLoading } = useQuery<Application[]>({
         queryKey: ['admin-applications'],
         queryFn: async () => {
             const { data } = await axiosInstance.get('/admin/applications');
