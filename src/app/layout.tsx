@@ -8,6 +8,8 @@ import StoreProvider from "@/providers/StoreProvider";
 import TanstackProvider from "@/providers/TanstackProvider";
 import AuthProvider from "@/providers/AuthProvider";
 import { Toaster } from 'react-hot-toast';
+import { GlobalModalProvider } from "@/context/GlobalModalContext";
+import GlobalModal from "@/Components/ui/GlobalModal";
 
 const font = Roboto({
   weight: [
@@ -46,10 +48,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <TanstackProvider>
             <AuthProvider>
               <Provider>
-                <LayoutWrapper>
-                  <Toaster />
-                  {children}
-                </LayoutWrapper>
+                <GlobalModalProvider>
+                  <LayoutWrapper>
+                    <Toaster />
+                    <GlobalModal />
+                    {children}
+                  </LayoutWrapper>
+                </GlobalModalProvider>
               </Provider>
             </AuthProvider>
           </TanstackProvider>

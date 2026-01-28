@@ -10,6 +10,7 @@ export interface IUser extends Document {
   isVerified: boolean;
   image?: string;
   provider?: string;
+  savedJobs: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -51,6 +52,11 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       default: 'credentials',
     },
+    savedJobs: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Job',
+        default: [],
+    }],
   },
   {
     timestamps: true,

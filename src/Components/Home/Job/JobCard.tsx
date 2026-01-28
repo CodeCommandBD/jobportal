@@ -10,9 +10,10 @@ import { jobcardone } from '@/Assets' // Default fallback
 
 interface Props {
     item: IJob
+    isApplied?: boolean
 }
 
-const JobCard = ({item}: Props) => {
+const JobCard = ({item, isApplied = false}: Props) => {
   // Use employer image or fallback
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const jobImage = (item.employerId as any)?.image || jobcardone;
@@ -27,9 +28,17 @@ const JobCard = ({item}: Props) => {
                 Featured
             </div>
         )}
+        
+        {/* Applied Badge */}
+        {isApplied && (
+            <div className='absolute -top-3 right-4 bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm'>
+                <CheckCircle size={10} />
+                Applied
+            </div>
+        )}
 
         {/* bookmark icon */}
-        <div className='w-7 h-7 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 flex items-center transition-all justify-center rounded-full absolute top-4 right-4'>
+        <div className='w-7 h-7 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 flex items-center transition-all justify-center rounded-full absolute top-4 right-4 z-10'>
             <BsBookmark className='w-3 h-3'></BsBookmark>
         </div>
         {/*  */}

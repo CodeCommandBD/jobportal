@@ -5,6 +5,7 @@ import { useJobs } from '@/hooks/useJobs';
 import { IJob } from '@/models/Job';
 import { useSearchParams } from 'next/navigation';
 import { JobSkeleton } from '@/Components/helpers/SkeletonLoader';
+import { useAppliedJobs } from '@/hooks/useAppliedJobs';
 
 const Job = () => {
   const searchParams = useSearchParams();
@@ -15,6 +16,7 @@ const Job = () => {
   };
 
   const { data: jobs, isLoading, error } = useJobs(filters);
+  const { data: appliedJobIds } = useAppliedJobs();
 
   if (error) {
        return <div className="text-center py-10 text-red-500">Error loading jobs. Ensure database is connected.</div>
@@ -37,7 +39,7 @@ const Job = () => {
                             data-aos-anchor-placement ='top-center'
                             data-aos-delay={i * 100}
                             key={item._id?.toString()}>
-                                <JobCard  item={item} />
+                                <JobCard  item={item} isApplied={appliedJobIds?.includes(item._id?.toString())} />
                             </div>
                         ))
                     ) : (

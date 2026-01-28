@@ -19,22 +19,27 @@ import {
 
 import dbConnect from '@/lib/db'
 import Job from '@/models/Job'
+import { auth } from '@/auth'
+import User from '@/models/User'
+import Application from '@/models/Application'
+import JobActions from './JobActions'
 import { Button } from '@/Components/ui/button'
 import { Badge } from '@/Components/ui/badge'
 
-// Force dynamic rendering to ensure fresh data
-export const dynamic = 'force-dynamic'
+// ... existing imports
 
-interface PageProps {
-  params: {
+interface JobPageProps {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default async function JobDetailsPage({ params }: PageProps) {
-  const { id } = params
+export default async function JobDetailsPage({ params }: JobPageProps) {
+  const { id } = await params
   
   await dbConnect()
+
+  const session = await auth()
   
   // Fetch job with employer details
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -44,11 +49,26 @@ export default async function JobDetailsPage({ params }: PageProps) {
     notFound()
   }
 
+  // Check if job is saved by current user
+  let isSaved = false
+  let hasApplied = false
+  if (session && session.user && session.user.email) {
+      const user = await User.findOne({ email: session.user.email }).select('savedJobs')
+      if (user) {
+          if (user.savedJobs) {
+             isSaved = user.savedJobs.some((savedId: any) => savedId.toString() === id)
+          }
+          // Check for existing application using the user's ID
+          const application = await Application.exists({ jobId: id, userId: user._id })
+          hasApplied = !!application
+      }
+  }
+
   // Format date
   const postedDate = job.createdAt ? format(new Date(job.createdAt), 'MMMM dd, yyyy') : 'Recently'
 
   return (
-    <div className="min-h-screen bg-gray-50/50 dark:bg-gray-900 pb-20">
+    <div className="min-h-screen bg-gray-50/50 dark:bg-gray-900 pb-20 pt-24">
       {/* Header / Hero Section */}
       <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
@@ -105,19 +125,13 @@ export default async function JobDetailsPage({ params }: PageProps) {
                     </div>
                 </div>
 
-                <div className="flex flex-col gap-3 w-full md:w-auto">
-                    <Button size="lg" className="w-full md:w-auto bg-purple-600 hover:bg-purple-700 text-white font-semibold">
-                        Apply Now
-                    </Button>
-                     <div className="flex gap-3">
-                         <Button variant="outline" className="flex-1 justify-center">
-                            Save Job
-                         </Button>
-                         <Button variant="outline" size="icon">
-                             <Share2 className="w-4 h-4" />
-                         </Button>
-                     </div>
-                </div>
+                <JobActions 
+                    jobId={job._id.toString()} 
+                    jobTitle={job.title} 
+                    employerId={job.employerId._id.toString()}
+                    initialIsSaved={isSaved}
+                    initialHasApplied={hasApplied}
+                />
             </div>
         </div>
       </div>
