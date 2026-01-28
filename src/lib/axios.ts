@@ -3,9 +3,13 @@ import axios from 'axios';
 
 // Create an Axios instance
 const getBaseURL = () => {
-  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
-  if (typeof window !== 'undefined') return window.location.origin + '/api';
-  return 'http://localhost:3000/api'; // Fallback for SSR
+  // If NEXT_PUBLIC_API_URL is set, use it directly (should include /api)
+  // Otherwise, use the current origin with /api appended
+  if (typeof window !== 'undefined') {
+    return window.location.origin + '/api';
+  }
+  // Fallback for SSR (server-side rendering)
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 };
 
 const axiosInstance = axios.create({
