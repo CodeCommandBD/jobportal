@@ -2,7 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 
-const fetchCategoryCounts = async (): Promise<Record<string, number>> => {
+const fetchCategoryCounts = async (): Promise<any[]> => {
   const { data } = await axiosInstance.get('/categories');
   return data;
 };

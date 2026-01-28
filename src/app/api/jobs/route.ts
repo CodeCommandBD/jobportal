@@ -24,7 +24,15 @@ export async function GET(req: Request) {
             query.category = category;
         }
 
-        const jobs = await Job.find(query).sort({ createdAt: -1 });
+        // Public users only see approved jobs
+        const session = await auth();
+        const isAdmin = (session?.user as any)?.role === 'admin';
+        
+        if (!isAdmin) {
+            query.status = 'approved';
+        }
+
+        const jobs = await Job.find(query).sort({ isFeatured: -1, createdAt: -1 });
         return NextResponse.json(jobs);
     } catch (error) {
         console.error("Fetch jobs error:", error);
@@ -44,6 +52,7 @@ export async function POST(req: Request) {
     const newJob = await Job.create({
       ...body,
       employerId: (session.user as any).id,
+      status: 'pending', // Force pending for new jobs
     });
     return NextResponse.json(newJob, { status: 201 });
   } catch (error) {

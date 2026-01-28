@@ -7,7 +7,6 @@ const Category = dynamic(() => import('./Category/Category'), { ssr: false })
 const Job = dynamic(() => import('./Job/Job'), { ssr: false })
 const TopCompany = dynamic(() => import('./TopCompany/TopCompany'), { ssr: false })
 const Info = dynamic(() => import('./Info/Info'), { ssr: false })
-const Pricing = dynamic(() => import('./Pricing/Pricing'), { ssr: false })
 const Review = dynamic(() => import('./Review/Review'), { ssr: false })
 import 'aos/dist/aos.css';
 const Home = () => {
@@ -30,7 +29,6 @@ const Home = () => {
       <Job></Job>
       <TopCompany></TopCompany>
       <Info></Info>
-      <Pricing></Pricing>
       <Review></Review>
     </div>
   )

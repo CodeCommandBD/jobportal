@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 import Maintenance from './Maintenance';
 import ChatWidget from './ChatWidget';
+import AnnouncementBanner from './AnnouncementBanner';
 
 const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname();
@@ -43,6 +44,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
     if (isAdminRoute) {
         return (
             <>
+                <AnnouncementBanner />
                 {children}
                 {settings?.showChat && <ChatWidget />}
             </>
@@ -51,6 +53,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <>
+            <AnnouncementBanner />
             <ResponsiveNav />
             {children}
             <Footer />

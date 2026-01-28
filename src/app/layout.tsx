@@ -24,10 +24,19 @@ const font = Roboto({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Job portal | Landing page",
-  description: "Job portal Landing page next js 15",
-};
+import dbConnect from "@/lib/db";
+import Settings from "@/models/Settings";
+
+export async function generateMetadata(): Promise<Metadata> {
+  await dbConnect();
+  const settings = await Settings.findOne();
+
+  return {
+    title: settings?.siteName || "Job Portal",
+    description: settings?.siteDescription || "Find your dream job",
+    keywords: settings?.metaKeywords || "jobs, tech, hire",
+  };
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

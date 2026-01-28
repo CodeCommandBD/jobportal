@@ -10,7 +10,11 @@ import {
     Settings, 
     LogOut,
     PlusCircle,
-    MessageSquare
+    MessageSquare,
+    Grid,
+    Megaphone,
+    FileText,
+    History
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -20,7 +24,11 @@ const AdminSidebar = () => {
     const menuItems = [
         { name: 'Overview', href: '/admin', icon: LayoutDashboard },
         { name: 'Manage Jobs', href: '/admin/jobs', icon: Briefcase },
+        { name: 'Job Categories', href: '/admin/categories', icon: Grid },
+        { name: 'Applications', href: '/admin/applications', icon: FileText },
+        { name: 'Announcements', href: '/admin/announcements', icon: Megaphone },
         { name: 'Manage Users', href: '/admin/users', icon: Users },
+        { name: 'Activity Logs', href: '/admin/logs', icon: History },
         { name: 'Live Chat', href: '/admin/chat', icon: MessageSquare },
         { name: 'Site Settings', href: '/admin/settings', icon: Settings },
     ];

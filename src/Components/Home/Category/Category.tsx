@@ -1,80 +1,11 @@
-'use client'
-import React from 'react'
-import { GiTakeMyMoney } from 'react-icons/gi'
-import { MdOutlineCampaign } from "react-icons/md";
-import { FiPenTool } from "react-icons/fi";
-import { FaCode, FaProjectDiagram, FaUserNurse, FaCarSide, FaChalkboardTeacher, FaUserTie } from "react-icons/fa";
-import { MdSupportAgent } from "react-icons/md";
+import { Grid } from 'lucide-react';
 import SectionHeading from '@/Components/helpers/SectionHeading';
 import CategoryCard from './CategoryCard';
 import { useCategoryCounts } from '@/hooks/useCategoryCounts';
 import { CategorySkeleton } from '@/Components/helpers/SkeletonLoader';
 
 const Category = () => {
-    const { data: counts, isLoading } = useCategoryCounts();
-
-    const categoryData = [
-        {
-            id: 1,
-            categoryName: 'Accounting / Finance',
-            openPositions: counts?.['Accounting / Finance'] || 0,
-            icon: <GiTakeMyMoney className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-        {
-            id: 2,
-            categoryName: 'Marketing',
-            openPositions: counts?.['Marketing'] || 0,
-            icon: <MdOutlineCampaign className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-        {
-            id: 3,
-            categoryName: 'Design',
-            openPositions: counts?.['Design'] || 0,
-            icon: <FiPenTool className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-        {
-            id: 4,
-            categoryName: 'Development',
-            openPositions: counts?.['Development'] || 0,
-            icon: <FaCode className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-        {
-            id: 5,
-            categoryName: 'Project Manager',
-            openPositions: counts?.['Project Manager'] || 0,
-            icon: <FaProjectDiagram className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-        {
-            id: 6,
-            categoryName: 'Customer Service',
-            openPositions: counts?.['Customer Service'] || 0,
-            icon: <MdSupportAgent className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-        {
-            id: 7,
-            categoryName: 'Health and Care',
-            openPositions: counts?.['Health and Care'] || 0,
-            icon: <FaUserNurse className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-        {
-            id: 8,
-            categoryName: 'Automotive Jobs',
-            openPositions: counts?.['Automotive Jobs'] || 0,
-            icon: <FaCarSide className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-        {
-            id: 9,
-            categoryName: 'Education',
-            openPositions: counts?.['Education'] || 0,
-            icon: <FaChalkboardTeacher className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-        {
-            id: 10,
-            categoryName: 'Human Resources',
-            openPositions: counts?.['Human Resources'] || 0,
-            icon: <FaUserTie className='w-10 h-10 text-purple-500 dark:text-white' />
-        },
-    ]
+    const { data: categories = [], isLoading } = useCategoryCounts();
 
   return (
     <div className='pt-16 pb-16'>
@@ -86,20 +17,28 @@ const Category = () => {
                         <CategorySkeleton key={i} />
                     ))
                 ) : (
-                    categoryData?.map((item,i)=>(
+                    categories?.map((item: any, i: number)=>(
                         <div 
                         className='' 
-                        key={item.id}
+                        key={item._id}
                         data-aos='fade-right'
                         data-aos-anchor-placement ='top-center'
                         data-aos-delay={i * 100}
                         >
-                            <CategoryCard item={item}></CategoryCard>
+                            <CategoryCard item={{
+                                id: item._id,
+                                categoryName: item.name,
+                                openPositions: item.count,
+                                icon: <Grid className='w-10 h-10 text-purple-600 dark:text-white' />
+                            }}></CategoryCard>
                         </div>
                     ))
                 )
             }
         </div>
+        {categories.length === 0 && !isLoading && (
+            <div className="text-center text-gray-500">No categories added yet.</div>
+        )}
     </div>
   )
 }

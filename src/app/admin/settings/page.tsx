@@ -28,6 +28,7 @@ const SiteSettings = () => {
         maintenanceMode: false,
         showChat: false,
         maxJobsPerEmployer: 10,
+        metaKeywords: '',
     });
 
     useEffect(() => {
@@ -39,6 +40,7 @@ const SiteSettings = () => {
                 maintenanceMode: settings.maintenanceMode || false,
                 showChat: settings.showChat || false,
                 maxJobsPerEmployer: settings.maxJobsPerEmployer || 10,
+                metaKeywords: settings.metaKeywords || '',
             });
         }
     }, [settings]);
@@ -102,6 +104,16 @@ const SiteSettings = () => {
                                 value={form.siteDescription} 
                                 onChange={(e) => setForm({...form, siteDescription: e.target.value})} 
                                 placeholder="Enter a short description of your site"
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label htmlFor="metaKeywords">Meta Keywords (SEO)</Label>
+                            <Input 
+                                id="metaKeywords" 
+                                value={form.metaKeywords} 
+                                onChange={(e) => setForm({...form, metaKeywords: e.target.value})} 
+                                placeholder="e.g. jobs, tech, developer, hiring"
                             />
                         </div>
 

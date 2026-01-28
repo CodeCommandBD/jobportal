@@ -3,6 +3,7 @@ import React from 'react'
 import { BsBookmark } from 'react-icons/bs'
 import { BiBriefcase } from 'react-icons/bi'
 import { GrLocation } from 'react-icons/gr'
+import { Star, CheckCircle } from 'lucide-react'
 import { IJob } from '@/models/Job'
 import { jobcardone } from '@/Assets' // Default fallback
 
@@ -15,7 +16,15 @@ const JobCard = ({item}: Props) => {
   const jobImage = (item.employerId as any)?.image || jobcardone;
 
   return (
-    <div className='border-[1.5px] border-gray-300 dark:border-gray-700 rounded-lg p-6 relative'>
+    <div className={`border-[1.5px] rounded-lg p-6 relative transition-all ${item.isFeatured ? 'border-yellow-400 bg-yellow-50/10 shadow-md ring-1 ring-yellow-400/20' : 'border-gray-200 dark:border-gray-700'}`}>
+        {/* Featured Badge */}
+        {item.isFeatured && (
+            <div className='absolute -top-3 left-4 bg-yellow-400 text-yellow-900 text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 shadow-sm'>
+                <Star size={10} fill="currentColor" />
+                Featured
+            </div>
+        )}
+
         {/* bookmark icon */}
         <div className='w-7 h-7 cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-800 flex items-center transition-all justify-center rounded-full absolute top-4 right-4'>
             <BsBookmark className='w-3 h-3'></BsBookmark>
@@ -28,7 +37,12 @@ const JobCard = ({item}: Props) => {
                 <div className='flex items-center gap-5 mt-2'>
                     <div className='flex items-center gap-1 text-gray-500'>
                         <BiBriefcase className='w-5 h-5 '></BiBriefcase>
-                        <p className='text-gray-500 text-sm'>{item.company}</p>
+                        <div className="flex items-center gap-1">
+                            <p className='text-gray-500 text-sm'>{item.company}</p>
+                            {(item.employerId as any)?.isVerified && (
+                                <CheckCircle size={14} className="text-blue-500" fill="currentColor" />
+                            )}
+                        </div>
                     </div>
                     <div className='flex items-center gap-1 text-gray-500'>
                         <GrLocation className='w-5 h-5 '></GrLocation>

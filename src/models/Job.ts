@@ -12,6 +12,8 @@ export interface IJob extends Document {
   urgency: 'Normal' | 'Urgent';
   skills: string[];
   employerId: mongoose.Types.ObjectId;
+  status: 'pending' | 'approved' | 'rejected';
+  isFeatured: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -59,6 +61,15 @@ const JobSchema: Schema<IJob> = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'rejected'],
+      default: 'pending',
+    },
+    isFeatured: {
+      type: Boolean,
+      default: false,
     },
   },
   {

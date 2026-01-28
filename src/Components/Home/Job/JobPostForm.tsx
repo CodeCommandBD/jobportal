@@ -13,14 +13,16 @@ import { Label } from "@/Components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/Components/ui/card"
 import { useSession } from "next-auth/react"
 
+import { useCategoryCounts } from "@/hooks/useCategoryCounts"
+
 const jobSchema = z.object({
-  title: z.string().min(3),
-  company: z.string().min(2),
-  location: z.string().min(2),
-  category: z.string().min(2),
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  company: z.string().min(2, "Company must be at least 2 characters"),
+  location: z.string().min(2, "Location must be at least 2 characters"),
+  category: z.string().min(1, "Please select a category"),
   jobType: z.enum(['Full Time', 'Part Time', 'Remote', 'Contract', 'Internship']),
   salaryRange: z.string().optional(),
-  description: z.string().min(10),
+  description: z.string().min(10, "Description must be at least 10 characters"),
   urgency: z.enum(['Normal', 'Urgent']),
 })
 
@@ -29,6 +31,7 @@ type JobFormValues = z.infer<typeof jobSchema>
 export default function JobPostForm() {
   const router = useRouter()
   const { data: session } = useSession()
+  const { data: categories = [], isLoading: categoriesLoading } = useCategoryCounts()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -65,34 +68,45 @@ export default function JobPostForm() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto shadow-lg my-10">
+    <Card className="w-full max-w-2xl mx-auto shadow-lg my-10 border-none dark:bg-gray-900">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">Post a New Job</CardTitle>
+        <CardTitle className="text-2xl font-bold text-center dark:text-white">Post a New Job</CardTitle>
+        <CardDescription className="text-center">Fill in the details to reach thousands of job seekers.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Job Title</Label>
-              <Input id="title" placeholder="e.g. Senior React Developer" {...register("title")} />
-              {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
+              <Label htmlFor="title" className="dark:text-gray-300">Job Title</Label>
+              <Input id="title" placeholder="e.g. Senior React Developer" className="dark:bg-gray-800 dark:border-gray-700" {...register("title")} />
+              {errors.title && <p className="text-xs text-red-500">{errors.title.message}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="company">Company Name</Label>
-              <Input id="company" placeholder="e.g. Acme Corp" {...register("company")} />
+              <Label htmlFor="company" className="dark:text-gray-300">Company Name</Label>
+              <Input id="company" placeholder="e.g. Acme Corp" className="dark:bg-gray-800 dark:border-gray-700" {...register("company")} />
               {errors.company && <p className="text-sm text-red-500">{errors.company.message}</p>}
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Input id="location" placeholder="e.g. New York, USA" {...register("location")} />
+              <Label htmlFor="location" className="dark:text-gray-300">Location</Label>
+              <Input id="location" placeholder="e.g. New York, USA" className="dark:bg-gray-800 dark:border-gray-700" {...register("location")} />
               {errors.location && <p className="text-sm text-red-500">{errors.location.message}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Input id="category" placeholder="e.g. Engineering" {...register("category")} />
+              <Label htmlFor="category" className="dark:text-gray-300">Category</Label>
+              <select 
+                id="category"
+                {...register("category")}
+                className="flex h-10 w-full rounded-md border border-input bg-transparent dark:bg-gray-800 dark:border-gray-700 px-3 py-1 text-base shadow-sm md:text-sm dark:text-white"
+                disabled={categoriesLoading}
+              >
+                <option value="">{categoriesLoading ? "Loading..." : "Select Category"}</option>
+                {categories.map((cat: any) => (
+                  <option key={cat._id} value={cat.name}>{cat.name}</option>
+                ))}
+              </select>
               {errors.category && <p className="text-sm text-red-500">{errors.category.message}</p>}
             </div>
           </div>

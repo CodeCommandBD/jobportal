@@ -6,6 +6,8 @@ export interface IUser extends Document {
   email: string;
   password?: string;
   role: 'jobseeker' | 'employer' | 'admin';
+  status: 'active' | 'banned';
+  isVerified: boolean;
   image?: string;
   provider?: string;
   createdAt: Date;
@@ -32,6 +34,15 @@ const UserSchema: Schema<IUser> = new Schema(
       type: String,
       enum: ['jobseeker', 'employer', 'admin'],
       default: 'jobseeker',
+    },
+    status: {
+      type: String,
+      enum: ['active', 'banned'],
+      default: 'active',
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
     },
     image: {
       type: String,

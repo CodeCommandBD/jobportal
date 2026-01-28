@@ -8,6 +8,7 @@ export interface ISettings extends Document {
   maintenanceMode: boolean;
   showChat: boolean;
   maxJobsPerEmployer: number;
+  metaKeywords: string;
 }
 
 const SettingsSchema: Schema = new Schema({
@@ -17,6 +18,7 @@ const SettingsSchema: Schema = new Schema({
   maintenanceMode: { type: Boolean, default: false },
   showChat: { type: Boolean, default: false },
   maxJobsPerEmployer: { type: Number, default: 10 },
+  metaKeywords: { type: String, default: 'jobs, tech, developer, hiring, recruitment' },
 }, { timestamps: true });
 
 if (mongoose.models.Settings) {
