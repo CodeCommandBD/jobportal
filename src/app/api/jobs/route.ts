@@ -11,6 +11,7 @@ export async function GET(req: Request) {
         const title = searchParams.get('title');
         const location = searchParams.get('location');
         const category = searchParams.get('category');
+        const featured = searchParams.get('featured');
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const query: Record<string, any> = {};
@@ -23,6 +24,9 @@ export async function GET(req: Request) {
         }
         if (category) {
             query.category = category;
+        }
+        if (featured === 'true') {
+            query.isFeatured = true;
         }
 
         // Public users only see approved jobs

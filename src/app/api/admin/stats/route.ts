@@ -1,8 +1,8 @@
-
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
 import Job from "@/models/Job";
+import AuditLog from "@/models/AuditLog";
 import { auth } from "@/auth";
 
 export async function GET() {
@@ -14,11 +14,14 @@ export async function GET() {
 
         await dbConnect();
 
-        const [totalJobs, totalUsers, totalEmployers, totalJobseekers] = await Promise.all([
+        const [totalJobs, totalUsers, totalEmployers, totalJobseekers, pendingJobs, unverifiedEmployers, recentLogs] = await Promise.all([
             Job.countDocuments(),
             User.countDocuments(),
             User.countDocuments({ role: 'employer' }),
-            User.countDocuments({ role: 'jobseeker' })
+            User.countDocuments({ role: 'jobseeker' }),
+            Job.countDocuments({ status: 'pending' }),
+            User.countDocuments({ role: 'employer', isVerified: false }),
+            AuditLog.find().sort({ createdAt: -1 }).limit(5).lean()
         ]);
 
         // Fetch growth data for the last 7 days
@@ -70,6 +73,9 @@ export async function GET() {
             totalUsers,
             totalEmployers,
             totalJobseekers,
+            pendingJobs,
+            unverifiedEmployers,
+            recentLogs,
             chartData
         });
     } catch (error) {

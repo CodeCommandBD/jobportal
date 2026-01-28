@@ -26,10 +26,11 @@ const AdminSidebar = () => {
         { name: 'Job Categories', href: '/admin/categories', icon: Grid },
         { name: 'Applications', href: '/admin/applications', icon: FileText },
         { name: 'Announcements', href: '/admin/announcements', icon: Megaphone },
+        { name: 'Testimonials', href: '/admin/testimonials', icon: MessageSquare },
         { name: 'Manage Users', href: '/admin/users', icon: Users },
         { name: 'Activity Logs', href: '/admin/logs', icon: History },
         { name: 'Live Chat', href: '/admin/chat', icon: MessageSquare },
-        { name: 'Site Settings', href: '/admin/settings', icon: Settings },
+        { name: 'Site Settings', href: '/admin/site-settings', icon: Settings },
     ];
 
     return (
