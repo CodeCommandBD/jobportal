@@ -1,0 +1,32 @@
+export const Navlinks = [
+    {
+        id:1,
+        url:'/',
+        label:"Home",
+    },
+    {
+        id:2,
+        url:'/findjob',
+        label:"Find Job",
+    },
+    {
+        id:3,
+        url:'/candidates',
+        label:"Candidates",
+    },
+    {
+        id:4,
+        url:'/employ',
+        label:"Employ",
+    },
+    {
+        id:5,
+        url:'/blog',
+        label:"Blog",
+    },
+    {
+        id:6,
+        url:'/contact',
+        label:"Contact",
+    },
+]
