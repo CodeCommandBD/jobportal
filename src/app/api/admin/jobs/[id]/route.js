@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/db";
 import Job from "@/models/Job";
@@ -6,10 +5,10 @@ import { auth } from "@/auth";
 import { logActivity } from "@/lib/audit";
 
 export async function DELETE(req, { params }) {
+    const { id } = await params;
     try {
-        const { id } = await params;
         const session = await auth();
-        if (!session?.user || session.user.role !== 'admin') {
+        if (!session || session.user?.role !== 'admin') {
             return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
         }
 
@@ -20,7 +19,7 @@ export async function DELETE(req, { params }) {
             return NextResponse.json({ message: "Job not found" }, { status: 404 });
         }
 
-        return NextResponse.json({ message: "Job deleted successfully" });
+        return NextResponse.json({ message: "Job deleted successfuly" });
     } catch (error) {
         console.error("Delete job error:", error);
         return NextResponse.json({ message: "Failed to delete job" }, { status: 500 });
@@ -28,10 +27,10 @@ export async function DELETE(req, { params }) {
 }
 
 export async function PATCH(req, { params }) {
+    const { id } = await params;
     try {
-        const { id } = await params;
         const session = await auth();
-        if (!session?.user || session.user.role !== 'admin') {
+        if (!session || session.user?.role !== 'admin') {
             return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
         }
 
@@ -43,7 +42,6 @@ export async function PATCH(req, { params }) {
             return NextResponse.json({ message: "Job not found" }, { status: 404 });
         }
 
-        // Log the activity
         let action = "Updated Job";
         if (body.status && body.status !== 'pending') {
             action = body.status === 'approved' ? "Job Approved" : "Job Rejected";
