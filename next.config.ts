@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
+/**
+ * Next.js Configuration.
+ * Configures image remote patterns and other framework-level settings.
+ */
 const nextConfig: NextConfig = {
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -21,7 +26,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'i.ibb.co.com', // Temporary fix for typo
+        hostname: 'i.ibb.co.com',
       },
       {
         protocol: 'https',
