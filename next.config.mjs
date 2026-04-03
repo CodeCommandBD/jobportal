@@ -1,4 +1,8 @@
-/** @type {import('next').NextConfig} */
+/**
+ * Next.js Configuration.
+ * Configures image remote patterns and other framework-level settings.
+ * @type {import('next').NextConfig}
+ */
 const nextConfig = {
   images: {
     unoptimized: true,
