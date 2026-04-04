@@ -4,6 +4,7 @@ import dbConnect from "@/lib/db"
 import User from "@/models/User"
 import bcrypt from "bcryptjs"
 import { z } from "zod"
+import { authConfig } from "./auth.config"
 
 async function getUser(email) {
   await dbConnect()
@@ -17,6 +18,7 @@ async function getUser(email) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -30,46 +32,34 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data
-          const user = await getUser(email)
-          if (!user) return null
           
+          console.log(`[AUTH] 🔍 Searching for user: ${email.toLowerCase()}`);
+          const user = await getUser(email.toLowerCase())
+          
+          if (!user) {
+            console.log(`[AUTH] ❌ User not found in database.`);
+            return null
+          }
+          
+          console.log(`[AUTH] 🔑 Verifying password for: ${user.email}`);
           const passwordsMatch = await bcrypt.compare(password, user.password)
 
           if (passwordsMatch) {
+            console.log(`[AUTH] ✅ Login successful!`);
             return {
               id: user._id.toString(),
               name: user.name,
               email: user.email,
               role: user.role,
             }
+          } else {
+            console.log(`[AUTH] ❌ Password mismatch.`);
           }
         }
 
-        console.log("Invalid credentials")
+        console.log("[AUTH] ❌ Invalid credentials or validation failed.");
         return null
       },
     }),
   ],
-  callbacks: {
-    async jwt({ token, user, trigger, session }) {
-        if (user) {
-            token.role = user.role;
-            token.id = user.id;
-        }
-        if (trigger === "update" && session?.name) {
-            token.name = session.name
-        }
-        return token;
-    },
-    async session({ session, token }) {
-        if (token && session.user) {
-            session.user.id = token.id;
-            session.user.role = token.role;
-        }
-        return session;
-    }
-  },
-  pages: {
-    signIn: '/signin', 
-  },
 })
