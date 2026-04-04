@@ -42,7 +42,7 @@ export async function generateMetadata() {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${font.className} antialiased`}>
+      <body className={`${font.className} antialiased`} suppressHydrationWarning>
         <StoreProvider>
           <TanstackProvider>
             <AuthProvider>
