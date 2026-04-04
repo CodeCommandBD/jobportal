@@ -103,9 +103,11 @@ const EmployerDashboard = () => {
                             <p className="text-purple-100 text-sm mb-6 leading-relaxed">
                                 Complete your company profile to attract 2x more qualified candidates.
                             </p>
-                            <Button className="w-full bg-white text-purple-600 hover:bg-gray-100 rounded-2xl font-bold py-6">
-                                Edit Company Profile
-                            </Button>
+                            <Link href="/dashboard/employer/company-profile">
+                                <Button className="w-full bg-white text-purple-600 hover:bg-gray-100 rounded-2xl font-bold py-6">
+                                    Edit Company Profile
+                                </Button>
+                            </Link>
                         </div>
                         
                         <div className="bg-white dark:bg-gray-800 rounded-[2rem] p-8 border border-gray-100 dark:border-gray-700 shadow-sm">

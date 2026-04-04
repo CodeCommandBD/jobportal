@@ -8,10 +8,7 @@ const ApplicationSchema = new mongoose.Schema(
       ref: 'Job',
       required: true,
     },
-    jobTitle: {
-      type: String,
-      required: true,
-    },
+    jobTitle: { type: String, required: true },
     employerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -22,29 +19,19 @@ const ApplicationSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
-    userName: {
-      type: String,
-      required: true,
-    },
-    userEmail: {
-      type: String,
-      required: true,
-    },
-    resumeUrl: {
-      type: String,
-    },
+    userName: { type: String, required: true },
+    userEmail: { type: String, required: true },
+    resumeUrl: { type: String },
+    coverLetter: { type: String },
     status: {
       type: String,
-      enum: ['pending', 'reviewed', 'interviewing', 'accepted', 'rejected'],
+      enum: ['pending', 'shortlisted', 'interview', 'hired', 'rejected'],
       default: 'pending',
     },
-    coverLetter: {
-      type: String,
-    },
+    interviewDate: { type: Date },
+    employerNote: { type: String },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const Application = mongoose.models.Application || mongoose.model('Application', ApplicationSchema);

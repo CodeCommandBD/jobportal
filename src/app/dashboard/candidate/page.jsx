@@ -5,14 +5,8 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 import { 
-    Clock, 
-    CheckCircle, 
-    XCircle, 
-    Briefcase,
-    MapPin,
-    Calendar,
-    ArrowRight,
-    Search
+    Clock, CheckCircle, XCircle, Briefcase,
+    MapPin, Calendar, ArrowRight, Search, Bell, Star
 } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
 import Link from 'next/link';
@@ -31,11 +25,11 @@ const CandidateApplicationsPage = () => {
 
     const getStatusInfo = (status) => {
         switch (status) {
-            case 'accepted': return { label: 'Accepted', icon: CheckCircle, color: 'text-green-600 bg-green-50 border-green-100' };
-            case 'rejected': return { label: 'Rejected', icon: XCircle, color: 'text-red-600 bg-red-50 border-red-100' };
-            case 'interviewing': return { label: 'Interviewing', icon: Clock, color: 'text-blue-600 bg-blue-50 border-blue-100' };
-            case 'reviewed': return { label: 'Reviewed', icon: Clock, color: 'text-purple-600 bg-purple-50 border-purple-100' };
-            default: return { label: 'Pending', icon: Clock, color: 'text-yellow-600 bg-yellow-50 border-yellow-100' };
+            case 'hired':        return { label: 'Hired! 🎉',     icon: CheckCircle, color: 'text-green-600 bg-green-50 border-green-100' };
+            case 'shortlisted':  return { label: 'Shortlisted',   icon: Star,        color: 'text-blue-600 bg-blue-50 border-blue-100' };
+            case 'interview':    return { label: 'Interview',      icon: Calendar,    color: 'text-purple-600 bg-purple-50 border-purple-100' };
+            case 'rejected':     return { label: 'Not Selected',   icon: XCircle,     color: 'text-red-600 bg-red-50 border-red-100' };
+            default:             return { label: 'Pending',        icon: Clock,       color: 'text-yellow-600 bg-yellow-50 border-yellow-100' };
         }
     };
 

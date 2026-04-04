@@ -23,6 +23,29 @@ import Application from '@/models/Application'
 import JobActions from './JobActions'
 import { Badge } from '@/Components/ui/badge'
 
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  await dbConnect();
+  const job = await Job.findById(id).populate('employerId', 'companyName image').lean();
+  if (!job) return { title: 'Job Not Found' };
+
+  return {
+    title: `${job.title} at ${job.company} — Job Portal`,
+    description: job.description?.slice(0, 160) || `Apply for ${job.title} at ${job.company}`,
+    openGraph: {
+      title: `${job.title} at ${job.company}`,
+      description: job.description?.slice(0, 160),
+      type: 'website',
+      images: job.employerId?.image ? [job.employerId.image] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${job.title} at ${job.company}`,
+      description: job.description?.slice(0, 160),
+    },
+  };
+}
+
 export default async function JobDetailsPage({ params }) {
   const { id } = await params
   
@@ -206,7 +229,7 @@ export default async function JobDetailsPage({ params }) {
                     )}
                     <div>
                         <h4 className="font-bold text-gray-900 dark:text-white">{job.company}</h4>
-                        <Link href="#" className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1">
+                        <Link href={`/company/${job.employerId._id}`} className="text-sm text-purple-600 hover:text-purple-700 font-medium flex items-center gap-1">
                             View Profile <ArrowLeft className="w-3 h-3 rotate-180" />
                         </Link>
                     </div>

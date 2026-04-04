@@ -7,7 +7,7 @@ import { auth } from "@/auth";
 export async function PATCH(req) {
     try {
         const session = await auth();
-        if (!session?.user || session.user.role !== 'jobseeker') {
+        if (!session?.user) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
         }
 
@@ -16,17 +16,24 @@ export async function PATCH(req) {
 
         await dbConnect();
 
-        // Only allow updating certain fields
-        const allowedUpdates = ['name', 'image', 'title', 'location', 'skills', 'bio'];
+        // All editable profile fields
+        const allowedUpdates = [
+            'name', 'image', 'title', 'location', 'skills', 'bio',
+            'resumeUrl', 'github', 'linkedin', 'portfolio',
+            'yearsOfExperience', 'education',
+            // employer fields
+            'companyName', 'companyLogo', 'companyDescription',
+            'companyWebsite', 'companySize', 'companyIndustry',
+        ];
+
         const updates = {};
-        
         Object.keys(body).forEach(key => {
             if (allowedUpdates.includes(key)) {
                 updates[key] = body[key];
             }
         });
 
-        const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true }).select('-password');
 
         if (!updatedUser) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
