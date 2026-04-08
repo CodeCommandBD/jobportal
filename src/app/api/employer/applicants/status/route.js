@@ -42,9 +42,51 @@ export async function PATCH(req) {
             return NextResponse.json({ message: "Application not found or unauthorized" }, { status: 404 });
         }
 
+        // Send status-change email to candidate (non-blocking)
+        if (status) {
+            sendStatusEmail(updatedApplication).catch(err =>
+                console.error('Status email error (non-blocking):', err)
+            );
+        }
+
         return NextResponse.json(updatedApplication);
     } catch (error) {
         console.error("Update application status error:", error);
         return NextResponse.json({ message: "Failed to update status" }, { status: 500 });
+    }
+}
+
+async function sendStatusEmail(application) {
+    try {
+        const { sendStatusUpdateEmail } = await import('@/lib/email');
+        const user = application.userId;
+        const job = application.jobId;
+
+        if (!user || !user.email) return;
+
+        // ── Create In-App Notification ──
+        try {
+            const Notification = (await import('@/models/Notification')).default;
+            await Notification.create({
+                userId: user._id, // User._id should be passed 
+                title: 'Application Status Updated',
+                message: `Your application for ${job.title} at ${application.companyName || 'the employer'} is now marked as ${application.status}.`,
+                type: application.status === 'rejected' ? 'error' : application.status === 'hired' ? 'success' : 'info',
+                link: `/dashboard/candidate`
+            });
+        } catch(e) { console.error('Error creating in-app notification:', e); }
+
+        // ── Send Email ──
+        await sendStatusUpdateEmail({
+
+            to: user.email,
+            candidateName: user.name,
+            jobTitle: job.title,
+            company: application.companyName || 'the employer', // Fallback
+            status: application.status,
+            interviewDate: application.interviewDate
+        });
+    } catch (err) {
+        console.error('Failed to send status update email:', err);
     }
 }
