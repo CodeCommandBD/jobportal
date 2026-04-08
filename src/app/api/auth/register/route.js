@@ -13,7 +13,7 @@ const registerSchema = z.object({
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { name, email, password } = registerSchema.parse(body);
+    const { name, email, password, role = "jobseeker" } = body;
 
     await dbConnect();
 
@@ -31,7 +31,7 @@ export async function POST(req) {
       name,
       email,
       password: hashedPassword,
-      role: "jobseeker",
+      role,
     });
 
     return NextResponse.json(
