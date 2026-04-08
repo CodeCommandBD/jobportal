@@ -14,13 +14,14 @@ export async function GET() {
 
         await dbConnect();
 
-        const [totalJobs, totalUsers, totalEmployers, totalJobseekers, pendingJobs, unverifiedEmployers, recentLogs] = await Promise.all([
+        const [totalJobs, totalUsers, totalEmployers, totalJobseekers, pendingJobs, unverifiedEmployers, pendingFeaturedRequests, recentLogs] = await Promise.all([
             Job.countDocuments(),
             User.countDocuments(),
             User.countDocuments({ role: 'employer' }),
             User.countDocuments({ role: 'jobseeker' }),
             Job.countDocuments({ status: 'pending' }),
             User.countDocuments({ role: 'employer', isVerified: false }),
+            Job.countDocuments({ featuredRequest: true, isFeatured: false }),
             AuditLog.find().sort({ createdAt: -1 }).limit(5).lean()
         ]);
 
@@ -73,6 +74,7 @@ export async function GET() {
             totalJobseekers,
             pendingJobs,
             unverifiedEmployers,
+            pendingFeaturedRequests,
             recentLogs,
             chartData
         });
