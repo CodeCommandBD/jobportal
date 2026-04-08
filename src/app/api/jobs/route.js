@@ -99,9 +99,63 @@ export async function POST(req) {
       employerId: session.user.id,
       status: 'pending', 
     });
+
+    // ── Fire-and-forget: send alert emails to matching candidates ──
+    // We only send alerts when job is approved (admin approves). But we
+    // also trigger when employer posts (notify pre-existing alerts subscribers).
+    triggerJobAlerts(newJob).catch(err =>
+      console.error('Job alert email error (non-blocking):', err)
+    );
+
     return NextResponse.json(newJob, { status: 201 });
   } catch (error) {
     console.error("Create job error:", error);
     return NextResponse.json({ message: "Error creating job" }, { status: 500 });
+  }
+}
+
+/**
+ * Finds all active JobAlerts matching the new job and sends email notifications.
+ * Runs asynchronously and does not block the HTTP response.
+ */
+async function triggerJobAlerts(job) {
+  try {
+    const JobAlert = (await import('@/models/JobAlert')).default;
+    const User = (await import('@/models/User')).default;
+    const { sendJobAlertEmail } = await import('@/lib/email');
+
+    // Build an OR query to match any relevant alerts
+    const matchQuery = {
+      isActive: true,
+      $or: [
+        { category: job.category },
+        { jobType: job.jobType },
+        { keyword: { $regex: job.title, $options: 'i' } },
+      ],
+    };
+
+    const matchingAlerts = await JobAlert.find(matchQuery).lean();
+    if (!matchingAlerts.length) return;
+
+    // Get all unique user IDs
+    const userIds = [...new Set(matchingAlerts.map(a => a.userId.toString()))];
+    const users = await User.find({ _id: { $in: userIds } }).select('name email').lean();
+    const userMap = users.reduce((acc, u) => { acc[u._id.toString()] = u; return acc; }, {});
+
+    // Send email to each unique user (deduped)
+    const notified = new Set();
+    for (const alert of matchingAlerts) {
+      const uid = alert.userId.toString();
+      if (notified.has(uid)) continue;
+      const user = userMap[uid];
+      if (!user?.email) continue;
+
+      await sendJobAlertEmail({ to: user.email, candidateName: user.name, job });
+      notified.add(uid);
+    }
+
+    console.log(`✅ Sent job alerts to ${notified.size} candidates`);
+  } catch (err) {
+    console.error('triggerJobAlerts failed:', err);
   }
 }
