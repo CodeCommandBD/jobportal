@@ -1,7 +1,6 @@
-
 'use client'
 
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 import { 
@@ -10,12 +9,8 @@ import {
     UserCheck, 
     UserPlus, 
     TrendingUp, 
-    Calendar, 
-    Activity,
-    ArrowUpRight,
-    ArrowDownRight
+    Activity
 } from 'lucide-react';
-import StatCard from '@/Components/Admin/StatCard';
 import SectionHeading from '@/Components/helpers/SectionHeading';
 import { CustomLoader } from '@/Components/helpers/SkeletonLoader';
 import RecentActivity from '@/Components/Admin/Dashboard/RecentActivity';
@@ -28,12 +23,13 @@ import {
     XAxis, 
     YAxis, 
     CartesianGrid, 
-    Tooltip,
-    BarChart,
-    Bar,
-    Cell
+    Tooltip
 } from 'recharts';
 
+/**
+ * Consolidated Admin Dashboard Hub.
+ * Provides full platform access, dynamic statistics, and growth analytics.
+ */
 const AdminDashboard = () => {
     const { data: stats, isLoading } = useQuery({
         queryKey: ['admin-stats'],
@@ -41,7 +37,7 @@ const AdminDashboard = () => {
             const { data } = await axiosInstance.get('/admin/stats');
             return data;
         },
-        refetchInterval: 30000, // Refetch every 30 seconds for "live" feel
+        refetchInterval: 30000, // Refetch every 30 seconds for live data
     });
 
     const chartColors = {
