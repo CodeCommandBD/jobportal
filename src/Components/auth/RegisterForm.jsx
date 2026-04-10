@@ -23,6 +23,8 @@ export default function RegisterForm() {
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
 
+  const [role, setRole] = useState("jobseeker")
+
   const {
     register,
     handleSubmit,
@@ -36,7 +38,7 @@ export default function RegisterForm() {
     setError(null)
 
     try {
-      await axiosInstance.post("/auth/register", data)
+      await axiosInstance.post("/auth/register", { ...data, role })
       router.push("/signin")
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong")
@@ -46,52 +48,87 @@ export default function RegisterForm() {
   }
 
   return (
-    <Card className="w-full max-w-sm mx-auto shadow-lg">
-      <CardHeader>
-        <CardTitle className="text-2xl font-bold text-center">Sign Up</CardTitle>
-        <CardDescription className="text-center">
-          Create an account to start your journey
+    <Card className="w-full max-w-lg mx-auto shadow-2xl rounded-[2.5rem] border-purple-100 dark:border-gray-800 overflow-hidden">
+      <CardHeader className="bg-purple-50/50 dark:bg-gray-800/50 p-8 border-b border-purple-50 dark:border-gray-700">
+        <CardTitle className="text-3xl font-black text-gray-900 dark:text-white uppercase tracking-tighter">Join the Platform</CardTitle>
+        <CardDescription className="font-bold text-gray-500 uppercase tracking-widest text-xs">
+          Select your role and create your professional account
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <CardContent className="p-8">
+        
+        {/* Role Selector */}
+        <div className="flex p-1.5 bg-gray-100 dark:bg-gray-900 rounded-2xl mb-8">
+            {[
+                { id: 'jobseeker', label: 'Candidate', color: 'bg-blue-500' },
+                { id: 'employer', label: 'Employer', color: 'bg-green-500' },
+                { id: 'admin', label: 'Admin', color: 'bg-purple-600' }
+            ].map((r) => (
+                <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => setRole(r.id)}
+                    className={`flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-xl transition-all duration-300 ${
+                        role === r.id 
+                            ? `${r.color} text-white shadow-lg` 
+                            : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                    }`}
+                >
+                    {r.label}
+                </button>
+            ))}
+        </div>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
+            <Label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Full Name</Label>
             <Input
               id="name"
               placeholder="John Doe"
+              className="h-14 rounded-2xl border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-purple-500 font-bold"
               {...register("name")}
             />
             {errors.name && (
-              <p className="text-sm text-red-500">{errors.name.message}</p>
+              <p className="text-xs text-red-500 font-bold">{errors.name.message}</p>
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Email Address</Label>
             <Input
               id="email"
-              placeholder="m@example.com"
+              placeholder="name@example.com"
               type="email"
+              className="h-14 rounded-2xl border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-purple-500 font-bold"
               {...register("email")}
             />
             {errors.email && (
-              <p className="text-sm text-red-500">{errors.email.message}</p>
+              <p className="text-xs text-red-500 font-bold">{errors.email.message}</p>
             )}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label className="text-xs font-black uppercase tracking-widest text-gray-400 ml-1">Password</Label>
             <Input
               id="password"
               type="password"
+              placeholder="••••••••"
+              className="h-14 rounded-2xl border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 focus:ring-2 focus:ring-purple-500 font-bold"
               {...register("password")}
             />
             {errors.password && (
-              <p className="text-sm text-red-500">{errors.password.message}</p>
+              <p className="text-xs text-red-500 font-bold">{errors.password.message}</p>
             )}
           </div>
-          {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Creating account..." : "Sign Up"}
+
+          {role === 'admin' && (
+             <div className="p-4 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-100 dark:border-purple-800">
+                <p className="text-[10px] font-black text-purple-600 uppercase leading-none mb-1">Developer Mode</p>
+                <p className="text-[10px] font-bold text-purple-500 italic">Creating an admin account for platform management.</p>
+             </div>
+          )}
+
+          {error && <p className="text-sm text-red-500 text-center font-bold">{error}</p>}
+          <Button type="submit" className="w-full h-14 rounded-2xl bg-gray-900 dark:bg-white dark:text-black hover:bg-gray-800 text-lg font-black uppercase tracking-widest shadow-xl transition-all" disabled={loading}>
+            {loading ? "Processing..." : `Register as ${role}`}
           </Button>
         </form>
       </CardContent>
