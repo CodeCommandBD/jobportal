@@ -29,7 +29,8 @@ const LayoutWrapper = ({ children }) => {
     }
 
     const isAuthRoute = pathname === '/signin' || pathname === '/signup';
-    const isAdminRoute = pathname?.startsWith('/admin');
+    const isDashboardRoute = pathname?.startsWith('/dashboard');
+    const isAdminRoute = pathname?.startsWith('/admin') || pathname?.startsWith('/dashboard/admin');
     const isMaintenanceMode = settings?.maintenanceMode;
     const isUserAdmin = userRole === 'admin';
 
@@ -37,11 +38,14 @@ const LayoutWrapper = ({ children }) => {
         return <Maintenance />;
     }
 
-    if (isAdminRoute) {
+    // Hide global Navbar/Footer for all Dashboard routes (Admin, Employer, Jobseeker)
+    if (isDashboardRoute || isAdminRoute) {
         return (
             <>
                 <AnnouncementBanner />
-                {children}
+                <div className="bg-white dark:bg-gray-950 min-h-screen">
+                    {children}
+                </div>
                 {settings?.showChat && <ChatWidget />}
             </>
         );
@@ -49,9 +53,13 @@ const LayoutWrapper = ({ children }) => {
 
     return (
         <>
-            <AnnouncementBanner />
-            <ResponsiveNav />
-            {children}
+            <header className="fixed w-full top-0 z-[1000]">
+                <AnnouncementBanner />
+                <ResponsiveNav />
+            </header>
+            <div className="pt-24 lg:pt-32"> 
+                {children}
+            </div>
             <Footer />
             <ScrollToTheTop />
             {settings?.showChat && <ChatWidget />}
