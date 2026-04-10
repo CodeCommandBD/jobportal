@@ -19,7 +19,7 @@ const MobileNavbar = ({showNav, close}) => {
             Navlinks.map((link) => (
               <Link 
                 onClick={close}
-                className='text-white w-fit border-b-[1.5px] pb-1 border-white sm:text-[30px] text-xl flex flex-col gap-y-5' 
+                className='text-white w-fit border-b-[1.5px] pb-1 border-white sm:text-[30px] text-xl font-bold uppercase tracking-tight' 
                 href={link.url} 
                 key={link.id}
               >
@@ -27,6 +27,23 @@ const MobileNavbar = ({showNav, close}) => {
               </Link>
             ))
           }
+
+          {/* Add Dashboard links based on role for mobile access */}
+          {session?.user?.role === 'admin' && (
+            <Link onClick={close} href="/dashboard/admin" className='text-yellow-300 w-fit border-b-[1.5px] pb-1 border-yellow-300 sm:text-[30px] text-xl font-black uppercase tracking-tighter'>
+              Admin Panel
+            </Link>
+          )}
+          {session?.user?.role === 'employer' && (
+            <Link onClick={close} href="/dashboard/employer" className='text-blue-300 w-fit border-b-[1.5px] pb-1 border-blue-300 sm:text-[30px] text-xl font-black uppercase tracking-tighter'>
+              Employer Dashboard
+            </Link>
+          )}
+          {session?.user?.role === 'jobseeker' && (
+            <Link onClick={close} href="/dashboard/candidate" className='text-green-300 w-fit border-b-[1.5px] pb-1 border-green-300 sm:text-[30px] text-xl font-black uppercase tracking-tighter'>
+              Candidate Dashboard
+            </Link>
+          )}
 
           <div className="flex flex-col gap-4 mt-10">
             {!session ? (
