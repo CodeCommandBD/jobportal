@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { HiBars3BottomRight } from 'react-icons/hi2'
 import { useSession, signOut } from 'next-auth/react'
 import ThemeToggler from '@/Components/helpers/ThemeToggler'
+import NotificationDropdown from './NotificationDropdown'
 
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
@@ -32,8 +33,8 @@ const Navbar = ({ openNav }) => {
   }, [])
 
   return (
-    <div className={` ${navbg ? 'bg-white dark:bg-gray-900 shadow-md' : 'fixed'} transition-all duration-200  z-[1000] fixed w-full`}>
-      <div className='container p-4 flex items-center justify-between'>
+    <div className={`transition-all duration-300 z-[1000] w-full ${navbg ? 'bg-white dark:bg-gray-900 shadow-xl' : 'bg-transparent'}`}>
+      <div className='max-w-7xl mx-auto p-4 flex items-center justify-between'>
         <div className='flex items-center space-x-2'>
           <Link href="/">
             <div className='flex items-center space-x-2'>
@@ -46,7 +47,7 @@ const Navbar = ({ openNav }) => {
             </div>
           </Link>
         </div>
-        <div className='hidden lg:flex items-center space-x-10'>
+        <div className='hidden xl:flex items-center space-x-6'>
           {
             Navlinks?.map((item) => (
               <Link
@@ -55,37 +56,64 @@ const Navbar = ({ openNav }) => {
                 key={item.id}>{item.label}</Link>
             ))
           }
+          {session?.user?.role === 'admin' && (
+            <Link 
+              href="/dashboard/admin" 
+              className='text-base font-black text-purple-600 dark:text-purple-400 hover:text-purple-800 transition-all uppercase tracking-tighter'
+            >
+              Admin Panel
+            </Link>
+          )}
+          {session?.user?.role === 'employer' && (
+            <Link 
+              href="/dashboard/employer" 
+              className='text-base font-bold text-purple-600 dark:text-purple-400'
+            >
+              Employer Dashboard
+            </Link>
+          )}
+          {session?.user?.role === 'jobseeker' && (
+            <Link 
+              href="/dashboard/candidate" 
+              className='text-base font-bold text-purple-600 dark:text-purple-400'
+            >
+              My Dashboard
+            </Link>
+          )}
         </div>
 
-        <div className='flex items-center gap-x-6'>
-          <div className='flex gap-4'>
+        <div className='flex items-center gap-x-2 sm:gap-x-4'>
+          <div className='flex gap-2 sm:gap-3'>
             {!session ? (
               <Link href="/signin">
-                <button className='px-8 py-2 text-xs sm:text-sm rounded-lg cursor-pointer bg-gray-200 hover:bg-gray-300 transition-all duration-200 font-medium text-black'>
+                <button className='px-3 sm:px-5 py-1.5 text-[10px] sm:text-xs rounded-xl cursor-pointer bg-gray-100 hover:bg-gray-200 transition-all duration-200 font-bold text-gray-900 border border-gray-200'>
                   Sign In
                 </button>
               </Link>
             ) : (
               <button 
                 onClick={() => signOut()}
-                className='px-8 py-2 text-xs sm:text-sm rounded-lg cursor-pointer bg-red-100 hover:bg-red-200 transition-all duration-200 font-medium text-red-600'
+                className='px-3 sm:px-5 py-1.5 text-[10px] sm:text-xs rounded-xl cursor-pointer bg-red-50 hover:bg-red-100 transition-all duration-200 font-bold text-red-600 border border-red-100'
               >
                 Logout
               </button>
             )}
             
             <Link href={session ? "/post-job" : "/signin"}>
-              <button className='px-8 py-2 text-xs sm:text-sm rounded-lg cursor-pointer bg-purple-600 hover:bg-purple-900 text-white hidden sm:block transition-all duration-200 font-medium'>
-                Job Post
+              <button className='px-4 sm:px-6 py-1.5 text-xs rounded-xl cursor-pointer bg-purple-600 hover:bg-purple-700 text-white hidden xl:block transition-all duration-300 font-bold shadow-lg shadow-purple-500/20'>
+                Post Job
               </button>
             </Link>
           </div>
-          <div>
+          
+          <div className="flex flex-row items-center gap-x-1 sm:gap-x-3">
+            {session && <NotificationDropdown />}
             <ThemeToggler></ThemeToggler>
           </div>
+
           <HiBars3BottomRight
             onClick={openNav}
-            className=' lg:hidden w-8 h-8 cursor-pointer'></HiBars3BottomRight>
+            className='xl:hidden w-7 h-7 sm:w-8 sm:h-8 cursor-pointer hover:text-purple-600 transition-colors duration-200'></HiBars3BottomRight>
         </div>
       </div>
     </div>
