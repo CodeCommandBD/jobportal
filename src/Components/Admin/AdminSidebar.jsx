@@ -12,7 +12,8 @@ import {
     Grid,
     Megaphone,
     FileText,
-    History
+    History,
+    Star
 } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 
@@ -20,17 +21,18 @@ const AdminSidebar = () => {
     const pathname = usePathname();
 
     const menuItems = [
-        { name: 'Overview', href: '/admin', icon: LayoutDashboard },
-        { name: 'Manage Jobs', href: '/admin/jobs', icon: Briefcase },
-        { name: 'Job Categories', href: '/admin/categories', icon: Grid },
-        { name: 'Applications', href: '/admin/applications', icon: FileText },
-        { name: 'Announcements', href: '/admin/announcements', icon: Megaphone },
-        { name: 'Testimonials', href: '/admin/testimonials', icon: MessageSquare },
-        { name: 'Manage Users', href: '/admin/users', icon: Users },
-        { name: 'Activity Logs', href: '/admin/logs', icon: History },
-        { name: 'Live Chat', href: '/admin/chat', icon: MessageSquare },
-        { name: 'Home Page Settings', href: '/admin/site-settings', icon: Settings },
-        { name: 'General Settings', href: '/admin/settings', icon: Settings },
+        { name: 'Overview', href: '/dashboard/admin', icon: LayoutDashboard },
+        { name: 'Manage Jobs', href: '/dashboard/admin/jobs', icon: Briefcase },
+        { name: 'Featured Approvals', href: '/dashboard/admin/approvals', icon: Star },
+        { name: 'Job Categories', href: '/dashboard/admin/categories', icon: Grid },
+        { name: 'Applications', href: '/dashboard/admin/applications', icon: FileText },
+        { name: 'Announcements', href: '/dashboard/admin/announcements', icon: Megaphone },
+        { name: 'Testimonials', href: '/dashboard/admin/testimonials', icon: MessageSquare },
+        { name: 'Manage Users', href: '/dashboard/admin/users', icon: Users },
+        { name: 'Activity Logs', href: '/dashboard/admin/logs', icon: History },
+        { name: 'Live Chat', href: '/dashboard/admin/chat', icon: MessageSquare },
+        { name: 'Home Page Settings', href: '/dashboard/admin/site-settings', icon: Settings },
+        { name: 'General Settings', href: '/dashboard/admin/settings', icon: Settings },
     ];
 
     return (
