@@ -10,7 +10,9 @@ import {
     Clock, 
     ChevronRight, 
     Plus,
-    ExternalLink
+    ExternalLink,
+    ArrowRight,
+    TrendingUp
 } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
 import Link from 'next/link';
@@ -98,6 +100,41 @@ const EmployerDashboard = () => {
 
                     {/* Quick Links / Tips */}
                     <div className="space-y-6">
+                        <div className="bg-white dark:bg-gray-800 rounded-[2rem] p-8 border border-gray-100 dark:border-gray-700 shadow-sm relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-8 opacity-5">
+                                <Briefcase size={100} />
+                            </div>
+                            <div className="h-14 w-14 bg-purple-50 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center text-purple-600 mb-6 group-hover:scale-110 transition-transform">
+                                <Briefcase size={24} />
+                            </div>
+                            <h4 className="text-xl font-black text-gray-900 dark:text-white mb-2">My Jobs</h4>
+                            <p className="text-gray-500 text-sm mb-6">
+                                View all your posted jobs, track applicant pipelines, and request features.
+                            </p>
+                            <Link href="/dashboard/employer/jobs">
+                                <Button variant="outline" className="w-full justify-between h-12 rounded-xl group-hover:border-purple-300 group-hover:text-purple-600">
+                                    Manage Postings
+                                </Button>
+                            </Link>
+                        </div>
+                        
+                        <div className="bg-white dark:bg-gray-800 rounded-[2rem] p-8 border border-gray-100 dark:border-gray-700 shadow-sm relative overflow-hidden group">
+                            <div className="absolute top-0 right-0 p-8 opacity-5">
+                                <TrendingUp size={100} />
+                            </div>
+                            <div className="h-14 w-14 bg-green-50 dark:bg-green-900/30 rounded-2xl flex items-center justify-center text-green-600 mb-6 group-hover:scale-110 transition-transform">
+                                <TrendingUp size={24} />
+                            </div>
+                            <h4 className="text-xl font-black text-gray-900 dark:text-white mb-2">Analytics</h4>
+                            <p className="text-gray-500 text-sm mb-6">
+                                See how your job postings are performing and viewer demographics.
+                            </p>
+                            <Link href="#">
+                                <Button variant="outline" className="w-full justify-between h-12 rounded-xl group-hover:border-green-300 group-hover:text-green-600">
+                                    View Insights <ArrowRight size={16} />
+                                </Button>
+                            </Link>
+                        </div>
                         <div className="bg-gradient-to-br from-purple-600 to-indigo-700 rounded-[2rem] p-8 text-white shadow-xl shadow-purple-500/20">
                             <h4 className="text-lg font-bold mb-2">Build your Brand</h4>
                             <p className="text-purple-100 text-sm mb-6 leading-relaxed">
