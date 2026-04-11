@@ -5,7 +5,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '@/lib/axios';
 import { 
-    Clock, CheckCircle, XCircle, Briefcase,
+    Clock, CheckCircle, XCircle, Briefcase, Bookmark,
     MapPin, Calendar, ArrowRight, Search, Bell, Star
 } from 'lucide-react';
 import { Button } from '@/Components/ui/button';
@@ -43,11 +43,23 @@ const CandidateApplicationsPage = () => {
                         heading="My Job Applications" 
                         subheading="Track the progress of every job you've applied for in real-time." 
                     />
-                    <Link href="/findjob">
-                        <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-2xl h-12 px-6 shadow-lg shadow-purple-500/20">
-                            <Search size={20} className="mr-2" /> Find More Jobs
-                        </Button>
-                    </Link>
+                    <div className="flex gap-3">
+                        <Link href="/dashboard/candidate/saved-jobs">
+                            <Button variant="outline" className="border-purple-200 text-purple-600 hover:bg-purple-50 rounded-2xl h-12 px-6">
+                                <Bookmark size={20} className="mr-2" /> Saved Jobs
+                            </Button>
+                        </Link>
+                        <Link href="/dashboard/candidate/alerts">
+                            <Button variant="outline" className="border-purple-200 text-purple-600 hover:bg-purple-50 rounded-2xl h-12 px-6">
+                                <Bell size={20} className="mr-2" /> Manage Alerts
+                            </Button>
+                        </Link>
+                        <Link href="/findjob">
+                            <Button className="bg-purple-600 hover:bg-purple-700 text-white rounded-2xl h-12 px-6 shadow-lg shadow-purple-500/20">
+                                <Search size={20} className="mr-2" /> Find More Jobs
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-1 gap-6">
